@@ -15,6 +15,8 @@
 package com.telegroup.nezavisnetvapp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,16 +35,13 @@ import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
-import android.support.v17.leanback.widget.PresenterSelector;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HeaderViewListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,10 +49,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.google.gson.Gson;
+import com.telegroup.nezavisnetvapp.model.Category;
+import com.telegroup.nezavisnetvapp.model.NewsCard;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,54 +107,42 @@ public class MainFragment extends BrowseFragment {
 
     private void loadRows() {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
-        String  REQUEST_TAG = "com.androidtutorialpoint.volleyJsonArrayRequest";
-        final ArrayList<NewsCard> cards=new ArrayList<>();
-        JsonArrayRequest jsonArrayReq = new JsonArrayRequest("http://dtp.nezavisne.com/app/meni",
+        final String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonArrayRequest";
+        JsonArrayRequest categoriesRequest = new JsonArrayRequest(getResources().getString(string.get_categories),
                 new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONArray response2) {
-                        for (int i=0; i<response2.length();i++)
-                            try {
-                                HeaderItem header = new HeaderItem(i, response2.getJSONObject(i).getString("Naziv"));
-                                GridItemPresenter mGridPresenter = new GridItemPresenter();
+                    public void onResponse(JSONArray categoriesJSONArray) {
+                        final Gson gson = new Gson();
+                        if (categoriesJSONArray.length() > 0) {
+                            List<Category> categories = Arrays.asList(gson.fromJson(categoriesJSONArray.toString(), Category[].class));
+                            int i = 0;
+                            for (final Category category : categories) {
+                                HeaderItem header = new HeaderItem(i++, category.getTitle());
                                 CardPresenter cardPresenter = new CardPresenter();
                                 final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
-
-                                String meni=response2.getJSONObject(i).getString("meniID");
-                                    JsonArrayRequest jsonArray = new JsonArrayRequest("http://dtp.nezavisne.com/app/rubrika/" + meni + "/1/10",
-                                            new Response.Listener<JSONArray>() {
-                                                @Override
-                                                public void onResponse(JSONArray response) {
-                                                    for (int i = 0; i < 10; i++)
-                                                        try {
-                                                          NewsCard  card=new NewsCard(response.getJSONObject(i).getString("Naslov"),
-                                                                    response.getJSONObject(i).getString("vijestID"),
-                                                                    response.getJSONObject(i).getString("Lid"),
-                                                                    response.getJSONObject(i).getString("Slika"),
-                                                                    response.getJSONObject(i).getString("Datum"),
-                                                                    response.getJSONObject(i).getString("Autor"),
-                                                                    response.getJSONObject(i).getString("meniID"));
-                                                          cards.add(card);
-                                                          listRowAdapter.add(card);
-
-                                                        } catch (JSONException e) {
-                                                            e.printStackTrace();
-                                                        }
+                                JsonArrayRequest newsRequest = new JsonArrayRequest(getResources().getString(string.get_news_for_category_url) + category.getId() + getResources().getString(string.get_news_for_category_range),
+                                        new Response.Listener<JSONArray>() {
+                                            @Override
+                                            public void onResponse(JSONArray newsJSONArray) {
+                                                if (newsJSONArray.length() > 0) {
+                                                    List<NewsCard> newsCards = Arrays.asList(gson.fromJson(newsJSONArray.toString(), NewsCard[].class));
+                                                    for (NewsCard newsCard : newsCards) {
+                                                        newsCard.setColor(category.getColor());
+                                                        System.out.println(newsCard);
+                                                        listRowAdapter.add(newsCard);
+                                                    }
                                                 }
-                                            }, new Response.ErrorListener() {
-
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            VolleyLog.d(TAG, "Error: " + error.getMessage());
-
-                                        }
-                                    });
-                                    AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonArray,  "com.androidtutorialpoint.volleyJsonArrayRequest");
+                                            }
+                                        }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        VolleyLog.d(TAG, "Error: " + error.getMessage());
+                                    }
+                                });
+                                AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(newsRequest, REQUEST_TAG);
                                 mRowsAdapter.add(new ListRow(header, listRowAdapter));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
-
+                        }
                     }
                 }, new Response.ErrorListener() {
 
@@ -166,12 +152,9 @@ public class MainFragment extends BrowseFragment {
 
             }
         });
-        AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonArrayReq, REQUEST_TAG);
-
+        AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(categoriesRequest, REQUEST_TAG);
         setAdapter(mRowsAdapter);
     }
-
-
 
 
     private void prepareBackgroundManager() {
@@ -185,8 +168,8 @@ public class MainFragment extends BrowseFragment {
     }
 
     private void setupUIElements() {
-         setBadgeDrawable(getActivity().getResources().getDrawable(
-         drawable.nezavisne));
+        setBadgeDrawable(getActivity().getResources().getDrawable(
+                drawable.nezavisne));
 
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
@@ -203,7 +186,6 @@ public class MainFragment extends BrowseFragment {
         setOnItemViewClickedListener(new ItemViewClickedListener());
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
     }
-
 
 
     private final class ItemViewClickedListener implements OnItemViewClickedListener {
@@ -279,7 +261,6 @@ public class MainFragment extends BrowseFragment {
         public void onUnbindViewHolder(ViewHolder viewHolder) {
         }
     }
-
 
 
 }

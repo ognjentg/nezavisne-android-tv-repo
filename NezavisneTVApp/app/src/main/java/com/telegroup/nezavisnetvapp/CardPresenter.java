@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.telegroup.nezavisnetvapp.model.NewsCard;
 
 /*
  * A CardPresenter is used to generate Views and bind Objects to them on demand.
@@ -79,8 +80,6 @@ public class CardPresenter extends Presenter {
         Log.d(TAG, "onBindViewHolder");
         if (card.getImageUrl() != null) {
             cardView.setTitleText(card.getTitle());
-
-            cardView.setContentText(card.getLid());
             cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
             Glide.with(viewHolder.view.getContext())
                     .load(card.getImageUrl())

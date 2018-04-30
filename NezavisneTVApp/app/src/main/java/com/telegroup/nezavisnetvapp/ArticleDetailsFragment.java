@@ -38,7 +38,6 @@ import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -49,8 +48,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.squareup.picasso.Picasso;
-import com.telegroup.nezavisnetvapp.util.BlurTransform;
+import com.telegroup.nezavisnetvapp.model.NewsCard;
 import com.telegroup.nezavisnetvapp.util.BlurTransformation;
 
 import org.json.JSONArray;
@@ -219,7 +217,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                     @Override
                     public void onResponse(JSONArray response) {
                         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
-                        for (int i = 0; i < response.length(); i++)
+        /*                for (int i = 0; i < response.length(); i++)
                             try {
 
                                 NewsCard  card=new NewsCard(response.getJSONObject(i).getString("Naslov"),
@@ -235,7 +233,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
                         HeaderItem header = new HeaderItem(0, "Povezane vijesti");
                         mAdapter.add(new ListRow(header, listRowAdapter));
                         mPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
