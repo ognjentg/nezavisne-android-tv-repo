@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v17.leanback.widget.OverlappingRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.Leanback.BaseCardViewStyle"
+    android:id="@+id/main_layout">
+
+    <TextView
+        android:id="@+id/subcategory"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:maxLines="1" />
+
+
+
+
+
+
+</android.support.v17.leanback.widget.OverlappingRelativeLayout>

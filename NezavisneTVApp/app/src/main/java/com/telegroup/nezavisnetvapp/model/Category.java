@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-/**
- * Created by turja on 30.4.2018..
- */
 
 public class Category implements Serializable {
 

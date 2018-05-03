@@ -14,11 +14,16 @@
 
 package com.telegroup.nezavisnetvapp;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v17.leanback.widget.BaseCardView;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
@@ -35,6 +40,7 @@ public class CardPresenter extends Presenter {
     private static int sSelectedBackgroundColor;
     private static int sDefaultBackgroundColor;
     private Drawable mDefaultCardImage;
+    private Context mContext;
 
     private static void updateCardBackgroundColor(ImageCardView view, boolean selected) {
         int color = selected ? sSelectedBackgroundColor : sDefaultBackgroundColor;
@@ -47,14 +53,15 @@ public class CardPresenter extends Presenter {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
         Log.d(TAG, "onCreateViewHolder");
-
-        sDefaultBackgroundColor = parent.getResources().getColor(R.color.default_background);
-        sSelectedBackgroundColor = parent.getResources().getColor(R.color.selected_background);
+        mContext=parent.getContext();
+        sDefaultBackgroundColor = parent.getResources().getColor(R.color.transparent);
+        sSelectedBackgroundColor = parent.getResources().getColor(R.color.transparent_selected);
         /*
          * This template uses a default image in res/drawable, but the general case for Android TV
          * will require your resources in xhdpi. For more information, see
          * https://developer.android.com/training/tv/start/layouts.html#density-resources
          */
+
         mDefaultCardImage = parent.getResources().getDrawable(R.drawable.newsdefault);
 
         ImageCardView cardView = new ImageCardView(parent.getContext()) {
@@ -64,9 +71,10 @@ public class CardPresenter extends Presenter {
                 super.setSelected(selected);
             }
         };
-
+        cardView.setCardType(BaseCardView.CARD_TYPE_INFO_OVER);
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
+        cardView.findViewById(R.id.content_text).setVisibility(View.GONE);
         updateCardBackgroundColor(cardView, false);
         return new ViewHolder(cardView);
     }
@@ -76,10 +84,13 @@ public class CardPresenter extends Presenter {
 
         NewsCard card = (NewsCard) item;
         ImageCardView cardView = (ImageCardView) viewHolder.view;
-
         Log.d(TAG, "onBindViewHolder");
         if (card.getImageUrl() != null) {
             cardView.setTitleText(card.getTitle());
+            ((TextView)cardView.findViewById(R.id.title_text)).setMaxLines(3);
+            TextView content=((TextView)cardView.findViewById(R.id.content_text));
+
+
             cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
             Glide.with(viewHolder.view.getContext())
                     .load(card.getImageUrl())

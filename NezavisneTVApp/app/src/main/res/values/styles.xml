@@ -8,4 +8,9 @@
     <style name="CustomSearchOrbView" parent="Widget.Leanback.SearchOrbViewStyle">
         <item name="searchOrbIcon">@drawable/nezavisne</item>
     </style>
+
+    <style name="MovieCardTitleTwoLineStyle" parent="Widget.Leanback.ImageCardView.TitleStyle">
+        <item name="android:maxLines">2</item>
+        <item name="android:minLines">2</item>
+    </style>
 </resources>
