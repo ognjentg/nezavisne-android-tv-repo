@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.telegroup.nezavisnetvapp;
+package com.telegroup.nezavisnetvapp.legacy;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.telegroup.nezavisnetvapp.R;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
 
 /*

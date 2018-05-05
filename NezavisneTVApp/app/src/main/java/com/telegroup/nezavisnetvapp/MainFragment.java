@@ -14,7 +14,6 @@
 
 package com.telegroup.nezavisnetvapp;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
@@ -52,9 +51,10 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.gson.Gson;
 import com.telegroup.nezavisnetvapp.model.Category;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
+import com.telegroup.nezavisnetvapp.presenter.NewsCardPresenter;
+import com.telegroup.nezavisnetvapp.widget.NewsCardView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import static com.telegroup.nezavisnetvapp.R.*;
 
@@ -118,7 +118,8 @@ public class MainFragment extends BrowseFragment {
                             int i = 0;
                             for (final Category category : categories) {
                                 HeaderItem header = new HeaderItem(i++, category.getTitle());
-                                CardPresenter cardPresenter = new CardPresenter();
+                                //CardPresenter cardPresenter = new CardPresenter();
+                                NewsCardPresenter cardPresenter=new NewsCardPresenter();
                                 final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
                                 JsonArrayRequest newsRequest = new JsonArrayRequest(getResources().getString(string.get_news_for_category_url) + category.getId() + getResources().getString(string.get_news_for_category_range),
                                         new Response.Listener<JSONArray>() {
@@ -203,7 +204,7 @@ public class MainFragment extends BrowseFragment {
 
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         getActivity(),
-                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
+                        ((NewsCardView) itemViewHolder.view).getNewsImageView(),
                         DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
                 getActivity().startActivity(intent, bundle);
             } else if (item instanceof String) {
