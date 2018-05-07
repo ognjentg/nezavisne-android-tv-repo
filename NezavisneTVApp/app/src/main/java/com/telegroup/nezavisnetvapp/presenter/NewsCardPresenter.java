@@ -3,10 +3,12 @@ package com.telegroup.nezavisnetvapp.presenter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.telegroup.nezavisnetvapp.R;
@@ -36,13 +38,20 @@ public class NewsCardPresenter extends Presenter {
 
     private static int sSelectedBackgroundColor;
     private static int sDefaultBackgroundColor;
+    private static int sSelectedTitleTextColor;
+    private static int sDefaultTitleTextColor;
     private Drawable mDefaultCardImage;
     private static Context mContext;
     private static void updateCardBackgroundColor(NewsCardView view, boolean selected) {
-        int color = selected ? sSelectedBackgroundColor : sDefaultBackgroundColor;
+        int colorBackground = selected ? sSelectedBackgroundColor : sDefaultBackgroundColor;
+        int colorText = selected ? sSelectedTitleTextColor : sDefaultTitleTextColor;
         // Both background colors should be set because the view's background is temporarily visible
         // during animations.
-        view.findViewById(R.id.news_title).setBackgroundColor(color);
+
+        TextView cardTitle = view.findViewById(R.id.news_title);
+
+        cardTitle.setBackgroundColor(colorBackground);
+        cardTitle.setTextColor(colorText);
     }
 
     @Override
@@ -53,6 +62,12 @@ public class NewsCardPresenter extends Presenter {
                 ContextCompat.getColor(parent.getContext(), R.color.transparent);
         sSelectedBackgroundColor =
                 ContextCompat.getColor(parent.getContext(), R.color.transparent_selected);
+
+        sDefaultTitleTextColor =
+                ContextCompat.getColor(parent.getContext(), R.color.title_text);
+        sSelectedTitleTextColor =
+                ContextCompat.getColor(parent.getContext(), R.color.title_text_selected);
+
         /*
          * This template uses a default image in res/drawable, but the general case for Android TV
          * will require your resources in xhdpi. For more information, see

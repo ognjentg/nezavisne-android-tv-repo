@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.BaseCardView;
+import android.support.v17.leanback.widget.ImageCardView;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import android.widget.TextView;
 
 import com.telegroup.nezavisnetvapp.R;
 
-public class NewsCardView extends BaseCardView {
+public class NewsCardView extends ImageCardView {
     private TextView mNewsTitle;
     ObjectAnimator mFadeInAnimator;
     private boolean mAttachedToWindow;
@@ -45,8 +46,10 @@ public class NewsCardView extends BaseCardView {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View view = inflater.inflate(R.layout.card_layout, this);
         mNewsTitle=view.findViewById(R.id.news_title);
+        mNewsTitle.setPadding(10,5,10,5);
         mNewsImage=view.findViewById(R.id.news_image);
         mNewsSubcategory=view.findViewById(R.id.news_subcategory);
+        mNewsSubcategory.setPadding(5,2,5,2);
         mFadeInAnimator = ObjectAnimator.ofFloat(mNewsImage, ALPHA, 1f);
         mFadeInAnimator.setDuration(
                 mNewsImage.getResources().getInteger(android.R.integer.config_shortAnimTime));
