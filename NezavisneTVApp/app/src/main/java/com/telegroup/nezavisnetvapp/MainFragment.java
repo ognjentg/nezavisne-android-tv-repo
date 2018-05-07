@@ -21,6 +21,7 @@ import java.util.TimerTask;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,6 +49,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 import com.telegroup.nezavisnetvapp.model.Category;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
@@ -74,6 +79,7 @@ public class MainFragment extends BrowseFragment {
     private Timer mBackgroundTimer;
     private String mBackgroundUri;
     private BackgroundManager mBackgroundManager;
+    List<Category> categories;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -114,7 +120,7 @@ public class MainFragment extends BrowseFragment {
                     public void onResponse(JSONArray categoriesJSONArray) {
                         final Gson gson = new Gson();
                         if (categoriesJSONArray.length() > 0) {
-                            List<Category> categories = Arrays.asList(gson.fromJson(categoriesJSONArray.toString(), Category[].class));
+                            categories = Arrays.asList(gson.fromJson(categoriesJSONArray.toString(), Category[].class));
                             int i = 0;
                             for (final Category category : categories) {
                                 HeaderItem header = new HeaderItem(i++, category.getTitle());
@@ -219,24 +225,26 @@ public class MainFragment extends BrowseFragment {
         }
     }
 
+    private void startBackgroundTimer() {
+        if (null != mBackgroundTimer) {
+            mBackgroundTimer.cancel();
+        }
+        mBackgroundTimer = new Timer();
+        mBackgroundTimer.schedule(new UpdateBackgroundTask(), BACKGROUND_UPDATE_DELAY);
+    }
+
     private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
                                    RowPresenter.ViewHolder rowViewHolder, Row row) {
-
-        }
-    }
-
-    private class UpdateBackgroundTask extends TimerTask {
-
-        @Override
-        public void run() {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            });
+            if(item instanceof NewsCard){
+                String preparedUri = ((NewsCard)item).getImageUrl().replaceAll("/[0-9]*x[0-9]*/", "/750x450/");
+                mBackgroundUri = preparedUri;
+                ((NewsCard)item).setImageUrl(preparedUri);
+                startBackgroundTimer();
+            }
+            //getView().setBackgroundColor(Color.parseColor(categories.get((int)row.getId()).getBoja()));
+            setBrandColor(Color.parseColor(categories.get((int)row.getId()).getColor()));
         }
     }
 
@@ -262,6 +270,39 @@ public class MainFragment extends BrowseFragment {
         public void onUnbindViewHolder(ViewHolder viewHolder) {
         }
     }
+
+    private void updateBackground(String uri) {
+        int width = mMetrics.widthPixels;
+        int height = mMetrics.heightPixels;
+        Glide.with(getActivity())
+                .load(uri)
+                .centerCrop()
+                .error(mDefaultBackground)
+                .into(new SimpleTarget<GlideDrawable>(width, height) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource,
+                                                GlideAnimation<? super GlideDrawable>
+                                                        glideAnimation) {
+                        resource.setColorFilter(0xFF5F5F5F, PorterDuff.Mode.MULTIPLY);
+                        mBackgroundManager.setDrawable(resource);
+                    }
+                });
+        mBackgroundTimer.cancel();
+    }
+
+    private class UpdateBackgroundTask extends TimerTask {
+
+        @Override
+        public void run() {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    updateBackground(mBackgroundUri);
+                }
+            });
+        }
+    }
+
 
 
 }

@@ -38,6 +38,7 @@ public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPrese
             viewHolder.getTitle().setTypeface(null, Typeface.BOLD);
             viewHolder.getBody().setMovementMethod(new ScrollingMovementMethod());
             viewHolder.getBody().setVerticalScrollBarEnabled(true);
+            viewHolder.getBody().setNestedScrollingEnabled(true);
             viewHolder.getBody().computeScroll();
             viewHolder.getTitle().setText(article.getTitle());
             viewHolder.getSubtitle().setText(article.getDescription());

@@ -51,6 +51,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.telegroup.nezavisnetvapp.legacy.CardPresenter;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
 import com.telegroup.nezavisnetvapp.util.BlurTransformation;
+import com.telegroup.nezavisnetvapp.util.ImageProcess;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -111,7 +112,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                                 setupRelatedArticleListRow();
                                 setAdapter(mAdapter);
                                 initializeBackground(mRealArticle);
-                                setOnItemViewClickedListener(new ItemViewClickedListener());
+                                //setOnItemViewClickedListener(new ItemViewClickedListener());
                             } catch (JSONException e) {
                                 Intent intent = new Intent(getActivity(), MainActivity.class);
                                 startActivity(intent);
@@ -142,7 +143,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                     @Override
                     public void onResourceReady(Bitmap bitmap,
                                                 GlideAnimation<? super Bitmap> glideAnimation) {
-                        mDetailsBackground.setCoverBitmap(bitmap);
+                        mDetailsBackground.setCoverBitmap(ImageProcess.darken(bitmap));
                         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
                     }
                 });
@@ -154,16 +155,16 @@ public class ArticleDetailsFragment extends DetailsFragment {
     private void setupDetailsOverviewRow() {
         Log.d(TAG, "doInBackground: " + mRealArticle.toString());
         final DetailsOverviewRow row = new DetailsOverviewRow(mRealArticle);
-        row.setImageDrawable(
+        /*row.setImageDrawable(
                 ContextCompat.getDrawable(getActivity(), R.drawable.red));
         int width = convertDpToPixel(getActivity().getApplicationContext(), DETAIL_THUMB_WIDTH);
-        int height = convertDpToPixel(getActivity().getApplicationContext(), DETAIL_THUMB_HEIGHT);
+        int height = convertDpToPixel(getActivity().getApplicationContext(), DETAIL_THUMB_HEIGHT);*/
 
       //  Bitmap blurredBitmap = BlurBuilder.blur( getActivity(),);
        // Picasso.with(getActivity()).load(mRealArticle.getImageUrl()).transform(BlurTransform.
          //       getInstance(this.getActivity())).fit().into();
 
-        Glide.with(getActivity())
+        /*Glide.with(getActivity())
 
                 .load(mRealArticle.getImageUrl()).transform(new BlurTransformation(getActivity()))
 
@@ -178,7 +179,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                         row.setImageDrawable(resource);
                         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
                     }
-                });
+                });*/
         mAdapter.add(row);
     }
 
@@ -192,11 +193,11 @@ public class ArticleDetailsFragment extends DetailsFragment {
                 ContextCompat.getColor(getActivity(), R.color.default_background));
 
         // Hook up transition element.
-        FullWidthDetailsOverviewSharedElementHelper sharedElementHelper =
+        /*FullWidthDetailsOverviewSharedElementHelper sharedElementHelper =
                 new FullWidthDetailsOverviewSharedElementHelper();
         sharedElementHelper.setSharedElementEnterTransition(
                 getActivity(), DetailsActivity.SHARED_ELEMENT_NAME);
-        detailsPresenter.setListener(sharedElementHelper);
+        //detailsPresenter.setListener(sharedElementHelper);*/
         detailsPresenter.setParticipatingEntranceTransition(true);
 
         detailsPresenter.setOnActionClickedListener(new OnActionClickedListener() {
