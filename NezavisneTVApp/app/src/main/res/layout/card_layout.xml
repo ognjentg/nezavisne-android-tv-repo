@@ -12,7 +12,7 @@
     <TextView
         android:id="@+id/news_title"
         android:layout_width="@dimen/card_width"
-        android:layout_height="@dimen/lb_basic_card_info_height"
+         android:layout_height="60dp"
         android:layout_gravity="bottom"
         android:maxLines="3"
         android:layout_marginTop="@dimen/lb_basic_card_info_text_margin"

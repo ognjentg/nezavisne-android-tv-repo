@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.telegroup.nezavisnetvapp.R;
 
+import java.util.logging.Logger;
+
 public class NewsCardView extends ImageCardView {
     private TextView mNewsTitle;
     ObjectAnimator mFadeInAnimator;
@@ -61,6 +63,14 @@ public class NewsCardView extends ImageCardView {
 
     public void setCardText(String string) {
         mNewsTitle.setText(string);
+        mNewsTitle.post(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("K:"+mNewsTitle.getLineCount());
+
+            }
+        });
+
     }
 
     public void setCardSubCategory(String string){

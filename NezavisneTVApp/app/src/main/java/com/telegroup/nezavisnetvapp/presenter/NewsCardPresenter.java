@@ -51,6 +51,7 @@ public class NewsCardPresenter extends Presenter {
         TextView cardTitle = view.findViewById(R.id.news_title);
 
         cardTitle.setBackgroundColor(colorBackground);
+
         cardTitle.setTextColor(colorText);
     }
 
