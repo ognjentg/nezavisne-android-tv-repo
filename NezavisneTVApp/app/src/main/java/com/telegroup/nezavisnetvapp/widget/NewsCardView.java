@@ -2,11 +2,13 @@ package com.telegroup.nezavisnetvapp.widget;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.BaseCardView;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,13 +63,28 @@ public class NewsCardView extends ImageCardView {
         cardAttrs.recycle();
     }
 
+
+    public static float dpFromPx(final Context context, final float px) {
+        return px / context.getResources().getDisplayMetrics().density;
+    }
+
+    public static float pxFromDp(final Context context, final float dp) {
+        return dp * context.getResources().getDisplayMetrics().density;
+    }
     public void setCardText(String string) {
-        mNewsTitle.setText(string);
+        mNewsTitle.setText(string.trim());
         mNewsTitle.post(new Runnable() {
             @Override
             public void run() {
                 System.out.println("K:"+mNewsTitle.getLineCount());
+                if (mNewsTitle.getLineCount()>1) {
+                    int px = (int) pxFromDp(getContext(), 20 * mNewsTitle.getLineCount());
+                    System.out.println("PX:" + px);
 
+                    mNewsTitle.getLayoutParams().height = px;
+                    //mNewsTitle.setLayoutParams(params);
+                    System.out.println("REAL" + mNewsTitle.getHeight());
+                }
             }
         });
 

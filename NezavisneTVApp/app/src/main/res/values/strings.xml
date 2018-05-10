@@ -23,5 +23,5 @@
     <!-- URL Parameters-->
     <string name="get_categories">http://dtp.nezavisne.com/app/meni</string>
     <string name="get_news_for_category_url">http://dtp.nezavisne.com/app/rubrika/</string>
-    <string name="get_news_for_category_range">/1/5</string> <!-- format is /{first}/{last}-->
+    <string name="get_news_for_category_range">/1/15</string> <!-- format is /{first}/{last}-->
 </resources>
