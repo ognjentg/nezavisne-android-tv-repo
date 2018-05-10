@@ -48,6 +48,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.google.gson.Gson;
 import com.telegroup.nezavisnetvapp.legacy.CardPresenter;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
 import com.telegroup.nezavisnetvapp.util.BlurTransformation;
@@ -92,17 +93,20 @@ public class ArticleDetailsFragment extends DetailsFragment {
         if (mSelectedArticle != null) {
             String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonObjectRequest";
 
-            JsonObjectRequest jsonObjectReq = new JsonObjectRequest("http://dtp.nezavisne.com/app/v2/vijesti/" + mSelectedArticle.getNewsId(), null,
+            final JsonObjectRequest jsonObjectReq = new JsonObjectRequest("http://dtp.nezavisne.com/app/v2/vijesti/" + mSelectedArticle.getNewsId(), null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            try {
-                                mRealArticle.setId(Integer.parseInt(response.getString("vijestID")));
+
+                                Gson gson=new Gson();
+                                mRealArticle=gson.fromJson(response.toString(),Article.class);
+                                mRealArticle.setBody(parseNewsContent(mRealArticle.getBody()));
+                           /*     mRealArticle.setId(Integer.parseInt(response.getString("vijestID")));
                                 mRealArticle.setTitle(response.getString("Naslov"));
                                 mRealArticle.setDescription("Autor: "+response.getString("Autor")+"     Datum: "+response.getString("Datum")+"\n\n"+response.getString("Lid"));
                                 mRealArticle.setImageUrl(response.getJSONArray("Slika").getJSONObject(0).getString("slikaURL").replace("555x333","750x450"));
                                 mRealArticle.setCategoryId(response.getString("meniRoditelj"));
-                                mRealArticle.setBody(parseNewsContent(response.getString("Tjelo")));
+                                mRealArticle.setBody(parseNewsContent(response.getString("Tjelo")));*/
                                 mPresenterSelector = new ClassPresenterSelector();
                                 mAdapter = new ArrayObjectAdapter(mPresenterSelector);
                                 System.out.println(mRealArticle.getTitle());
@@ -113,12 +117,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                                 setAdapter(mAdapter);
                                 initializeBackground(mRealArticle);
                                 //setOnItemViewClickedListener(new ItemViewClickedListener());
-                            } catch (JSONException e) {
-                                /*Intent intent = new Intent(getActivity(), MainActivity.class);
-                                startActivity(intent);*/
-                                Intent intent=new Intent(getActivity(),ErrorActivity.class);
-                                startActivity(intent);
-                            }
+
                         }
                     }
                     , new Response.ErrorListener() {
@@ -140,7 +139,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
         mDetailsBackground.enableParallax();
 
         Glide.with(getActivity())
-                .load((data.getImageUrl())).asBitmap()
+                .load((data.getImages()[0].getUrl())).asBitmap()
                 .centerCrop()
                 .error(R.drawable.default_background1)
                 .into(new SimpleTarget<Bitmap>() {

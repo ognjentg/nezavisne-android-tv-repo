@@ -16,6 +16,9 @@ package com.telegroup.nezavisnetvapp;
 
 import android.util.Log;
 
+import com.google.gson.annotations.SerializedName;
+import com.telegroup.nezavisnetvapp.model.Image;
+
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,21 +37,32 @@ public class Article implements Serializable {
         this.id = id;
     }
 
+    @SerializedName("vijestID")
     private long id;
+    @SerializedName("Naslov")
     private String title;
+    @SerializedName("Lid")
     private String description;
+    @SerializedName("Tjelo")
     private String body;
-    private String imageUrl;
+    @SerializedName("Slika")
+    private Image[] images;
+    @SerializedName("Galerija")
+    private String galleryFlag;
+    @SerializedName("meniRoditelj")
     private String categoryId;
-    public Article() {
-    }
 
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
+    public Article(long id, String title, String description, String body, Image[] images, String galleryFlag, String categoryId) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
         this.body = body;
+        this.images = images;
+        this.galleryFlag = galleryFlag;
+        this.categoryId = categoryId;
+    }
+    public Article(){
+
     }
 
     public static long getSerialVersionUID() {
@@ -71,12 +85,28 @@ public class Article implements Serializable {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getBody() {
+        return body;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public Image[] getImages() {
+        return images;
+    }
+
+    public void setImages(Image[] images) {
+        this.images = images;
+    }
+
+    public String getGalleryFlag() {
+        return galleryFlag;
+    }
+
+    public void setGalleryFlag(String galleryFlag) {
+        this.galleryFlag = galleryFlag;
     }
 
     public String getCategoryId() {
@@ -84,25 +114,6 @@ public class Article implements Serializable {
     }
 
     public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", categoryId='" + categoryId + '\'' +
-                '}';
-    }
-
-    public Article(long id, String title, String description, String imageUrl, String categoryId) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.imageUrl = imageUrl;
         this.categoryId = categoryId;
     }
 }
