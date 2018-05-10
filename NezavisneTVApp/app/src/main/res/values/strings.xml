@@ -18,8 +18,8 @@
     <string name="video_error_media_load_timeout">Media loading timed out</string>
     <string name="video_error_server_inaccessible">Media server was not reachable</string>
     <string name="video_error_unknown_error">Failed to load video</string>
-    <string name="error_fragment_message">An error occurred</string>
-    <string name="dismiss_error">Dismiss</string>
+    <string name="error_fragment_message">Greška</string>
+    <string name="dismiss_error">Pokušaj ponovo</string>
     <!-- URL Parameters-->
     <string name="get_categories">http://dtp.nezavisne.com/app/meni</string>
     <string name="get_news_for_category_url">http://dtp.nezavisne.com/app/rubrika/</string>

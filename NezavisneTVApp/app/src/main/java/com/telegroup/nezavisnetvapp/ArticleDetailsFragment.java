@@ -114,7 +114,9 @@ public class ArticleDetailsFragment extends DetailsFragment {
                                 initializeBackground(mRealArticle);
                                 //setOnItemViewClickedListener(new ItemViewClickedListener());
                             } catch (JSONException e) {
-                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                /*Intent intent = new Intent(getActivity(), MainActivity.class);
+                                startActivity(intent);*/
+                                Intent intent=new Intent(getActivity(),ErrorActivity.class);
                                 startActivity(intent);
                             }
                         }
@@ -123,6 +125,8 @@ public class ArticleDetailsFragment extends DetailsFragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Intent intent=new Intent(getActivity(),ErrorActivity.class);
+                    startActivity(intent);
                 }
             });
 

@@ -144,6 +144,8 @@ public class MainFragment extends BrowseFragment {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
                                         VolleyLog.d(TAG, "Error: " + error.getMessage());
+                                        Intent intent=new Intent(getActivity(),ErrorActivity.class);
+                                        startActivity(intent);
                                     }
                                 });
                                 AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(newsRequest, REQUEST_TAG);
@@ -155,7 +157,10 @@ public class MainFragment extends BrowseFragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                onDetach();
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Intent intent=new Intent(getActivity(),ErrorActivity.class);
+                startActivity(intent);
 
             }
         });
