@@ -90,6 +90,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
 
         mSelectedArticle =
                 (NewsCard) getActivity().getIntent().getSerializableExtra(DetailsActivity.Article);
+        initializeBackground(mSelectedArticle.getImageUrl());
         if (mSelectedArticle != null) {
             String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonObjectRequest";
 
@@ -151,6 +152,24 @@ public class ArticleDetailsFragment extends DetailsFragment {
                     }
                 });
     }
+
+    private void initializeBackground(String data) {
+        mDetailsBackground.enableParallax();
+
+        Glide.with(getActivity())
+                .load(data).asBitmap()
+                .centerCrop()
+                .error(R.drawable.default_background1)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap,
+                                                GlideAnimation<? super Bitmap> glideAnimation) {
+                        mDetailsBackground.setCoverBitmap(ImageProcess.darken(bitmap));
+                        //mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
+                    }
+                });
+    }
+
     public int convertDpToPixel(Context context, int dp) {
         float density = context.getResources().getDisplayMetrics().density;
         return Math.round((float) dp * density);
