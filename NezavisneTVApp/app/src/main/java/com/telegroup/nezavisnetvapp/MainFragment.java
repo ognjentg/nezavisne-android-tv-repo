@@ -210,7 +210,8 @@ public class MainFragment extends BrowseFragment {
                 NewsCard card = (NewsCard) item;
                 Log.d(TAG, "Item: " + item.toString());
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra("Article", card);
+                intent.putExtra(DetailsActivity.Article, card);
+                intent.putExtra(DetailsActivity.CategoryId, categories.get((int)row.getId()).getId());
 
 
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(

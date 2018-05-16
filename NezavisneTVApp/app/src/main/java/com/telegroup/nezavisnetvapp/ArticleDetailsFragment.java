@@ -50,7 +50,9 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 import com.telegroup.nezavisnetvapp.legacy.CardPresenter;
+import com.telegroup.nezavisnetvapp.model.Category;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
+import com.telegroup.nezavisnetvapp.presenter.NewsCardPresenter;
 import com.telegroup.nezavisnetvapp.util.BlurTransformation;
 import com.telegroup.nezavisnetvapp.util.ImageProcess;
 
@@ -60,6 +62,9 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
+
+import java.util.Arrays;
+import java.util.List;
 
 /*
  * LeanbackDetailsFragment extends DetailsFragment, a Wrapper fragment for leanback details screens.
@@ -78,6 +83,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
     private Article mRealArticle=new Article();
     private ArrayObjectAdapter mAdapter;
     private ClassPresenterSelector mPresenterSelector;
+    private String categoryId;
 
     private DetailsFragmentBackgroundController mDetailsBackground;
 
@@ -90,7 +96,9 @@ public class ArticleDetailsFragment extends DetailsFragment {
 
         mSelectedArticle =
                 (NewsCard) getActivity().getIntent().getSerializableExtra(DetailsActivity.Article);
-        initializeBackground(mSelectedArticle.getImageUrl());
+        categoryId =
+                (String) getActivity().getIntent().getSerializableExtra(DetailsActivity.CategoryId);
+        initializeBackground(mSelectedArticle.getImageUrl().replaceAll("/[0-9]*x[0-9]*/", "/750x450/"));
         if (mSelectedArticle != null) {
             String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonObjectRequest";
 
@@ -117,7 +125,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                                 setupRelatedArticleListRow();
                                 setAdapter(mAdapter);
                                 initializeBackground(mRealArticle);
-                                //setOnItemViewClickedListener(new ItemViewClickedListener());
+                                setOnItemViewClickedListener(new ItemViewClickedListener());
 
                         }
                     }
@@ -240,15 +248,13 @@ public class ArticleDetailsFragment extends DetailsFragment {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
-        /*                for (int i = 0; i < response.length(); i++)
+                        /*ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
+                        for (int i = 0; i < response.length(); i++)
                             try {
 
                                 NewsCard  card=new NewsCard(response.getJSONObject(i).getString("Naslov"),
                                         response.getJSONObject(i).getString("vijestID"),
-                                        response.getJSONObject(i).getString("Lid"),
                                         response.getJSONObject(i).getString("Slika"),
-                                        response.getJSONObject(i).getString("Datum"),
                                         response.getJSONObject(i).getString("Autor"),
                                         response.getJSONObject(i).getString("meniID"));
                                 if (!card.getNewsId().equals(mRealArticle.getId()+""))
@@ -257,10 +263,40 @@ public class ArticleDetailsFragment extends DetailsFragment {
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                            }*/
+                            }
                         HeaderItem header = new HeaderItem(0, "Povezane vijesti");
                         mAdapter.add(new ListRow(header, listRowAdapter));
-                        mPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
+                        mPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());*/
+                        final Gson gson = new Gson();
+                        final String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonArrayRequest";
+                        final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new NewsCardPresenter());
+                        JsonArrayRequest newsRequest = new JsonArrayRequest(getResources().getString(R.string.get_news_for_category_url) + categoryId + getResources().getString(R.string.get_news_for_category_range_extended),
+                                new Response.Listener<JSONArray>() {
+                                    @Override
+                                    public void onResponse(JSONArray newsJSONArray) {
+                                        if (newsJSONArray.length() > 0) {
+                                            List<NewsCard> newsCards = Arrays.asList(gson.fromJson(newsJSONArray.toString(), NewsCard[].class));
+                                            for (NewsCard newsCard : newsCards) {
+                                                if(!newsCard.getNewsId().equals(mSelectedArticle.getNewsId())) {
+                                                    newsCard.setColor(mSelectedArticle.getColor());
+                                                    listRowAdapter.add(newsCard);
+                                                }
+                                            }
+                                            HeaderItem header = new HeaderItem(0, "Povezane vijesti");
+                                            mAdapter.add(new ListRow(header, listRowAdapter));
+                                            mPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                                Intent intent=new Intent(getActivity(),ErrorActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                        AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(newsRequest, REQUEST_TAG);
+                        //mRowsAdapter.add(new ListRow(header, listRowAdapter));
                     }
                 }, new Response.ErrorListener() {
 
@@ -284,7 +320,8 @@ public class ArticleDetailsFragment extends DetailsFragment {
             if (item instanceof NewsCard) {
                 Log.d(TAG, "Item: " + item.toString());
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra("Article",(NewsCard) item);
+                intent.putExtra(DetailsActivity.Article,(NewsCard) item);
+                intent.putExtra(DetailsActivity.CategoryId, categoryId);
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         getActivity(),
                         ((ImageCardView) itemViewHolder.view).getMainImageView(),
