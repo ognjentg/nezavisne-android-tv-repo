@@ -35,6 +35,7 @@ public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPrese
 
         if (article != null) {
             viewHolder.getSubtitle().setMaxLines(150);
+            viewHolder.getBody().setMaxLines(500);
             viewHolder.getTitle().setTypeface(null, Typeface.BOLD);
             viewHolder.getBody().setMovementMethod(new ScrollingMovementMethod());
             viewHolder.getBody().setVerticalScrollBarEnabled(true);

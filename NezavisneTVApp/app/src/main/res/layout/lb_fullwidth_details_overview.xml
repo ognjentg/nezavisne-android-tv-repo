@@ -33,52 +33,49 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/lb_details_v2_card_height"
         android:layout_marginTop="@dimen/lb_details_v2_blank_height"
-        android:clipToPadding="false"
         android:background="?attr/defaultBrandColor"
-        android:elevation="@dimen/lb_details_overview_z"
-        >
+        android:clipToPadding="false"
+        android:elevation="@dimen/lb_details_overview_z">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-
-        <LinearLayout 
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/details_overview_actions_background"
-            android:background="?attr/defaultBrandColorDark"
-            android:orientation="vertical" >
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <android.support.v17.leanback.widget.HorizontalGridView
-                android:id="@+id/details_overview_actions"
+            <LinearLayout
+                android:id="@+id/details_overview_actions_background"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:clipToPadding="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:horizontalSpacing="@dimen/lb_details_overview_action_items_spacing"
-                lb:rowHeight="0dp" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:background="?attr/defaultBrandColorDark"
+                android:orientation="vertical">
 
-        <android.support.v17.leanback.widget.NonOverlappingFrameLayout
-            android:id="@+id/details_overview_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:descendantFocusability="afterDescendants"
-            android:gravity="top"
-            android:paddingStart="@dimen/lb_details_v2_description_margin_start"
-            android:paddingEnd="@dimen/lb_details_v2_description_margin_end"
-            android:paddingTop="@dimen/lb_details_v2_description_margin_top"
-            android:clipToPadding="false"
-            android:clipChildren="false"
-            />
-    </LinearLayout>
+                <android.support.v17.leanback.widget.HorizontalGridView
+                    android:id="@+id/details_overview_actions"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:clipToPadding="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:gravity="center"
+                    android:horizontalSpacing="@dimen/lb_details_overview_action_items_spacing"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="0dp"
+                    lb:rowHeight="0dp" />
+            </LinearLayout>
+
+            <android.support.v17.leanback.widget.NonOverlappingFrameLayout
+                android:id="@+id/details_overview_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:descendantFocusability="afterDescendants"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="top"
+                android:paddingEnd="0dp"
+                android:paddingStart="48dp"
+                android:paddingTop="48dp" />
+        </LinearLayout>
     </FrameLayout>
 </FrameLayout>
