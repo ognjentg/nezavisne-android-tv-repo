@@ -19,12 +19,18 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
@@ -50,6 +56,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -57,6 +65,7 @@ import com.google.gson.Gson;
 import com.telegroup.nezavisnetvapp.model.Category;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
 import com.telegroup.nezavisnetvapp.presenter.NewsCardPresenter;
+import com.telegroup.nezavisnetvapp.util.ImageProcess;
 import com.telegroup.nezavisnetvapp.widget.NewsCardView;
 
 import org.json.JSONArray;
@@ -79,12 +88,15 @@ public class MainFragment extends BrowseFragment {
     private Timer mBackgroundTimer;
     private String mBackgroundUri;
     private BackgroundManager mBackgroundManager;
+    private Context context;
     List<Category> categories;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onActivityCreated(savedInstanceState);
+
+        context = getActivity().getApplicationContext();
 
         prepareBackgroundManager();
 
@@ -280,7 +292,7 @@ public class MainFragment extends BrowseFragment {
     private void updateBackground(String uri) {
         int width = mMetrics.widthPixels;
         int height = mMetrics.heightPixels;
-        Glide.with(getActivity())
+        /*Glide.with(getActivity())
                 .load(uri)
                 .centerCrop()
                 .error(mDefaultBackground)
@@ -291,6 +303,33 @@ public class MainFragment extends BrowseFragment {
                                                         glideAnimation) {
                         resource.setColorFilter(0xFF5F5F5F, PorterDuff.Mode.MULTIPLY);
                         mBackgroundManager.setDrawable(resource);
+                    }
+                });*/
+        Glide.with(getActivity())
+                .load(uri)
+                .asBitmap()
+                .format(DecodeFormat.PREFER_ARGB_8888)
+                .centerCrop()
+                .error(R.drawable.default_background1)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(new SimpleTarget<Bitmap>() {
+
+                    @Override
+                    public void onResourceReady(Bitmap bitmap,
+                                                GlideAnimation<? super Bitmap> glideAnimation) {
+                        final RenderScript rs = RenderScript.create( context );
+                        final Allocation input = Allocation.createFromBitmap( rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT );
+                        final Allocation output = Allocation.createTyped( rs, input.getType() );
+                        final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create( rs, Element.U8_4( rs ) );
+                        script.setRadius( 5.f /* e.g. 3.f */ );
+                        script.setInput( input );
+                        script.forEach( output );
+                        output.copyTo( bitmap );
+                        Bitmap darkenedBitmap = ImageProcess.darken(bitmap);
+                        mBackgroundManager.setBitmap(darkenedBitmap);
+                        //mDetailsBackground.setCoverBitmap(ImageProcess.darken(bitmap));
+                        //mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
                     }
                 });
         mBackgroundTimer.cancel();

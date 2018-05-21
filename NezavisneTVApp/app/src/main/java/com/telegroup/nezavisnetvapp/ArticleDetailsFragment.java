@@ -14,10 +14,16 @@
 
 package com.telegroup.nezavisnetvapp;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.v17.leanback.app.DetailsFragment;
 import android.support.v17.leanback.app.DetailsFragmentBackgroundController;
 import android.support.v17.leanback.widget.Action;
@@ -45,6 +51,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -84,6 +92,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
     private ArrayObjectAdapter mAdapter;
     private ClassPresenterSelector mPresenterSelector;
     private String categoryId;
+    private Context context;
 
     private DetailsFragmentBackgroundController mDetailsBackground;
 
@@ -91,6 +100,8 @@ public class ArticleDetailsFragment extends DetailsFragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate DetailsFragment");
         super.onCreate(savedInstanceState);
+
+        context = getActivity().getApplicationContext();
 
         mDetailsBackground = new DetailsFragmentBackgroundController(this);
 
@@ -124,7 +135,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                                 setupDetailsOverviewRowPresenter();
                                 setupRelatedArticleListRow();
                                 setAdapter(mAdapter);
-                                initializeBackground(mRealArticle);
+                                //initializeBackground(mRealArticle);
                                 setOnItemViewClickedListener(new ItemViewClickedListener());
 
                         }
@@ -148,13 +159,23 @@ public class ArticleDetailsFragment extends DetailsFragment {
         mDetailsBackground.enableParallax();
 
         Glide.with(getActivity())
-                .load((data.getImages()[0].getUrl())).asBitmap()
+                .load((data.getImages()[0].getUrl()))
+                .asBitmap()
+                .format(DecodeFormat.PREFER_ARGB_8888)
                 .centerCrop()
                 .error(R.drawable.default_background1)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap bitmap,
                                                 GlideAnimation<? super Bitmap> glideAnimation) {
+                        final RenderScript rs = RenderScript.create( context );
+                        final Allocation input = Allocation.createFromBitmap( rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT );
+                        final Allocation output = Allocation.createTyped( rs, input.getType() );
+                        final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create( rs, Element.U8_4( rs ) );
+                        script.setRadius( 5.f /* e.g. 3.f */ );
+                        script.setInput( input );
+                        script.forEach( output );
+                        output.copyTo( bitmap );
                         mDetailsBackground.setCoverBitmap(ImageProcess.darken(bitmap));
                         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
                     }
@@ -165,13 +186,23 @@ public class ArticleDetailsFragment extends DetailsFragment {
         mDetailsBackground.enableParallax();
 
         Glide.with(getActivity())
-                .load(data).asBitmap()
+                .load(data)
+                .asBitmap()
+                .format(DecodeFormat.PREFER_ARGB_8888)
                 .centerCrop()
                 .error(R.drawable.default_background1)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap bitmap,
                                                 GlideAnimation<? super Bitmap> glideAnimation) {
+                        final RenderScript rs = RenderScript.create( context );
+                        final Allocation input = Allocation.createFromBitmap( rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT );
+                        final Allocation output = Allocation.createTyped( rs, input.getType() );
+                        final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create( rs, Element.U8_4( rs ) );
+                        script.setRadius( 5.f /* e.g. 3.f */ );
+                        script.setInput( input );
+                        script.forEach( output );
+                        output.copyTo( bitmap );
                         mDetailsBackground.setCoverBitmap(ImageProcess.darken(bitmap));
                         //mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
                     }
@@ -296,7 +327,6 @@ public class ArticleDetailsFragment extends DetailsFragment {
                             }
                         });
                         AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(newsRequest, REQUEST_TAG);
-                        //mRowsAdapter.add(new ListRow(header, listRowAdapter));
                     }
                 }, new Response.ErrorListener() {
 
