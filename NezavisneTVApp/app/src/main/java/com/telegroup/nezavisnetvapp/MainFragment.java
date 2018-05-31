@@ -34,6 +34,7 @@ import android.renderscript.ScriptIntrinsicBlur;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
+import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.ListRow;
@@ -65,6 +66,7 @@ import com.google.gson.Gson;
 import com.telegroup.nezavisnetvapp.model.Category;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
 import com.telegroup.nezavisnetvapp.presenter.NewsCardPresenter;
+import com.telegroup.nezavisnetvapp.presenter.StringCardPresenter;
 import com.telegroup.nezavisnetvapp.util.ImageProcess;
 import com.telegroup.nezavisnetvapp.widget.NewsCardView;
 
@@ -137,8 +139,12 @@ public class MainFragment extends BrowseFragment {
                             for (final Category category : categories) {
                                 HeaderItem header = new HeaderItem(i++, category.getTitle());
                                 //CardPresenter cardPresenter = new CardPresenter();
-                                NewsCardPresenter cardPresenter=new NewsCardPresenter();
-                                final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
+                                ClassPresenterSelector selector = new ClassPresenterSelector();
+                                StringCardPresenter stringPresenter = new StringCardPresenter();
+                                NewsCardPresenter cardPresenter = new NewsCardPresenter();
+                                selector.addClassPresenter(NewsCard.class, cardPresenter);
+                                selector.addClassPresenter(String.class, stringPresenter);
+                                final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(selector);
                                 JsonArrayRequest newsRequest = new JsonArrayRequest(getResources().getString(string.get_news_for_category_url) + category.getId() + getResources().getString(string.get_news_for_category_range),
                                         new Response.Listener<JSONArray>() {
                                             @Override
@@ -150,6 +156,7 @@ public class MainFragment extends BrowseFragment {
                                                         System.out.println(newsCard);
                                                         listRowAdapter.add(newsCard);
                                                     }
+                                                    listRowAdapter.add("Više...");
                                                 }
                                             }
                                         }, new Response.ErrorListener() {
