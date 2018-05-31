@@ -44,6 +44,7 @@ import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -133,6 +134,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                                 System.out.println(mRealArticle.getBody());
                                 setupDetailsOverviewRow();
                                 setupDetailsOverviewRowPresenter();
+                                setupGallery();
                                 setupRelatedArticleListRow();
                                 setAdapter(mAdapter);
                                 //initializeBackground(mRealArticle);
@@ -153,6 +155,11 @@ public class ArticleDetailsFragment extends DetailsFragment {
             AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectReq, REQUEST_TAG);
 
         }
+    }
+
+    private void setupGallery() {
+
+
     }
 
     private void initializeBackground(Article data) {
@@ -241,6 +248,17 @@ public class ArticleDetailsFragment extends DetailsFragment {
                         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
                     }
                 });*/
+        if ("D".equals(mRealArticle.getGalleryFlag())) {
+            ArrayObjectAdapter actionAdapter = new ArrayObjectAdapter();
+            Action action = new Action(
+                    5,
+                    getResources().getString(R.string.gallery), "",
+                    getResources().getDrawable(R.drawable.photo_camera));
+            ;
+            actionAdapter.add(
+                    action);
+            row.setActionsAdapter(actionAdapter);
+        }
         mAdapter.add(row);
     }
 
@@ -264,7 +282,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
         detailsPresenter.setOnActionClickedListener(new OnActionClickedListener() {
             @Override
             public void onActionClicked(Action action) {
-
+                Toast.makeText(getActivity(),"Test",Toast.LENGTH_SHORT).show();
             }
         });
 

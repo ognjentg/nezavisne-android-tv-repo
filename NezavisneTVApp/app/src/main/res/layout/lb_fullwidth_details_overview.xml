@@ -45,21 +45,21 @@
             <LinearLayout
                 android:id="@+id/details_overview_actions_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/defaultBrandColorDark"
+                android:layout_height="48dp"
                 android:orientation="vertical">
 
                 <android.support.v17.leanback.widget.HorizontalGridView
+                    android:layoutDirection="rtl"
                     android:id="@+id/details_overview_actions"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:gravity="center"
                     android:horizontalSpacing="@dimen/lb_details_overview_action_items_spacing"
                     android:paddingEnd="0dp"
-                    android:paddingStart="0dp"
+                    android:paddingStart="48dp"
                     lb:rowHeight="0dp" />
             </LinearLayout>
 
@@ -75,7 +75,7 @@
                 android:gravity="top"
                 android:paddingEnd="0dp"
                 android:paddingStart="48dp"
-                android:paddingTop="48dp" />
+                android:paddingTop="24dp" />
         </LinearLayout>
     </FrameLayout>
 </FrameLayout>
