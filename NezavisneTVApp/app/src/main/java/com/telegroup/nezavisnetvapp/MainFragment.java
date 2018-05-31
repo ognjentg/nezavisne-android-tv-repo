@@ -156,7 +156,7 @@ public class MainFragment extends BrowseFragment {
                                                         System.out.println(newsCard);
                                                         listRowAdapter.add(newsCard);
                                                     }
-                                                    listRowAdapter.add("Više...");
+                                                    listRowAdapter.add(category.getColor());
                                                 }
                                             }
                                         }, new Response.ErrorListener() {

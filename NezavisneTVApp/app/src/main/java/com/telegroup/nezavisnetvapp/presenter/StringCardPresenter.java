@@ -2,6 +2,7 @@ package com.telegroup.nezavisnetvapp.presenter;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
@@ -27,12 +28,15 @@ public class StringCardPresenter extends Presenter {
                 R.color.default_background));
         view.setTextColor(Color.WHITE);
         view.setGravity(Gravity.CENTER);
+        view.setTypeface(null, Typeface.BOLD);
+        view.setTextSize(view.getTextSize() * 1.4f);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
-        ((TextView) viewHolder.view).setText((String) item);
+        ((TextView) viewHolder.view).setText("Učitaj još");
+        viewHolder.view.setBackgroundColor(Color.parseColor((String)item));
     }
 
     @Override
