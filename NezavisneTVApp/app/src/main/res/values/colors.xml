@@ -2,6 +2,7 @@
     <color name="background_gradient_start">#c1c9d4</color>
     <color name="background_gradient_end">#2d8896</color>
     <color name="fastlane_background">#2e71a0</color>
+    <color name="black">#000000</color>
     <color name="search_opaque">#ffaa3f</color>
     <color name="selected_background">#2c3e4f</color>
     <color name="default_background">#1e2b37</color>

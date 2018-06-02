@@ -63,6 +63,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
+import com.telegroup.nezavisnetvapp.category.VerticalGridActivity;
 import com.telegroup.nezavisnetvapp.model.Category;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
 import com.telegroup.nezavisnetvapp.presenter.NewsCardPresenter;
@@ -153,7 +154,7 @@ public class MainFragment extends BrowseFragment {
                                                     List<NewsCard> newsCards = Arrays.asList(gson.fromJson(newsJSONArray.toString(), NewsCard[].class));
                                                     for (NewsCard newsCard : newsCards) {
                                                         newsCard.setColor(category.getColor());
-                                                        System.out.println(newsCard);
+                                                        //System.out.println(newsCard);
                                                         listRowAdapter.add(newsCard);
                                                     }
                                                     listRowAdapter.add(category.getColor());
@@ -239,13 +240,14 @@ public class MainFragment extends BrowseFragment {
                         DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
                 getActivity().startActivity(intent, bundle);
             } else if (item instanceof String) {
-                if (((String) item).contains(getString(string.error_fragment))) {
-                    Intent intent = new Intent(getActivity(), BrowseErrorActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getActivity(), ((String) item), Toast.LENGTH_SHORT)
-                            .show();
-                }
+                /*CategoryFragment fragment=new CategoryFragment();
+                getActivity().getFragmentManager().beginTransaction()
+                        .replace(id.main_browse_fragment, fragment)
+                        .addToBackStack(null)
+                        .commit();*/
+                Intent intent=new Intent(getActivity(), VerticalGridActivity.class);
+                System.out.println("Vertical grid");
+                getActivity().startActivity(intent);
             }
         }
     }
