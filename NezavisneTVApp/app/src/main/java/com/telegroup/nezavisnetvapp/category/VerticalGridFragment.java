@@ -23,6 +23,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.gson.Gson;
 import com.telegroup.nezavisnetvapp.AppSingleton;
+import com.telegroup.nezavisnetvapp.DetailsActivity;
 import com.telegroup.nezavisnetvapp.ErrorActivity;
 import com.telegroup.nezavisnetvapp.R;
 import com.telegroup.nezavisnetvapp.legacy.CardPresenter;
@@ -66,10 +67,9 @@ public class VerticalGridFragment extends android.support.v17.leanback.app.Verti
         VerticalGridPresenter gridPresenter = new VerticalGridPresenter();
         gridPresenter.setNumberOfColumns(NUM_COLUMNS);
         setGridPresenter(gridPresenter);
-        mAdapter = new ArrayObjectAdapter(new CardPresenter());
+        mAdapter = new ArrayObjectAdapter(new NewsCardPresenter());
         loadRows();
         setAdapter(mAdapter);
-
     }
 
     private void setupEventListeners() {
@@ -81,29 +81,30 @@ public class VerticalGridFragment extends android.support.v17.leanback.app.Verti
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
-            /*
-            if (item instanceof Movie) {
-                Movie movie = (Movie) item;
+
+            if (item instanceof NewsCard) {
+                NewsCard movie = (NewsCard) item;
 
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(DetailsActivity.MOVIE, movie);
+                intent.putExtra(DetailsActivity.Article, movie);
+                intent.putExtra(DetailsActivity.CategoryId, (String) getActivity().getIntent().getSerializableExtra(VerticalGridActivity.CategoryId));
                 getActivity().startActivity(intent);
             }
-            */
+
         }
     }
     private void loadRows() {
         final String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonArrayRequest";
                                 final Gson gson=new Gson();
-                                JsonArrayRequest newsRequest = new JsonArrayRequest(getResources().getString(R.string.get_sports),
+
+                                JsonArrayRequest newsRequest = new JsonArrayRequest("http://dtp.nezavisne.com/app/rubrika/" + getActivity().getIntent().getSerializableExtra(VerticalGridActivity.CategoryId) + "/1/20",
                                         new Response.Listener<JSONArray>() {
                                             @Override
                                             public void onResponse(JSONArray newsJSONArray) {
                                                 if (newsJSONArray.length() > 0) {
                                                     List<NewsCard> newsCards = Arrays.asList(gson.fromJson(newsJSONArray.toString(), NewsCard[].class));
                                                     for (NewsCard newsCard : newsCards) {
-                                                        newsCard.setColor("#000000");
-                                                        System.out.println("Leksa: "+newsCard);
+                                                        newsCard.setColor((String) getActivity().getIntent().getSerializableExtra(VerticalGridActivity.Color));
                                                         mAdapter.add(newsCard);
                                                     }
                                                 }

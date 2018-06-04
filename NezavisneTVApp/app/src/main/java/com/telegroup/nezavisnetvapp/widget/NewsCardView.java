@@ -50,7 +50,7 @@ public class NewsCardView extends ImageCardView {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View view = inflater.inflate(R.layout.card_layout, this);
         mNewsTitle=view.findViewById(R.id.news_title);
-        mNewsTitle.setPadding(10,5,10,5);
+        mNewsTitle.setPadding(10,0,10,0);
         mNewsImage=view.findViewById(R.id.news_image);
         mNewsSubcategory=view.findViewById(R.id.news_subcategory);
         mNewsSubcategory.setPadding(5,2,5,2);
@@ -72,6 +72,7 @@ public class NewsCardView extends ImageCardView {
         return dp * context.getResources().getDisplayMetrics().density;
     }
     public void setCardText(String string) {
+        //mNewsTitle.setText(string.trim());
         mNewsTitle.setText(string.trim());
         mNewsTitle.post(new Runnable() {
             @Override
@@ -87,7 +88,6 @@ public class NewsCardView extends ImageCardView {
                 }
             }
         });
-
     }
 
     public void setCardSubCategory(String string){

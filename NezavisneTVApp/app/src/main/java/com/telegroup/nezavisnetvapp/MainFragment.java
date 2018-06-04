@@ -93,6 +93,7 @@ public class MainFragment extends BrowseFragment {
     private BackgroundManager mBackgroundManager;
     private Context context;
     List<Category> categories;
+    private String uri;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -124,6 +125,10 @@ public class MainFragment extends BrowseFragment {
         super.onResume();
         mDefaultBackground = getResources().getDrawable(drawable.default_background1);
         mBackgroundManager.setDrawable(mDefaultBackground);
+
+        if (uri != null && !uri.isEmpty()) {
+            updateBackground(uri);
+        }
     }
 
     private void loadRows() {
@@ -246,6 +251,8 @@ public class MainFragment extends BrowseFragment {
                         .addToBackStack(null)
                         .commit();*/
                 Intent intent=new Intent(getActivity(), VerticalGridActivity.class);
+                intent.putExtra(VerticalGridActivity.CategoryId, categories.get((int)row.getId()).getId());
+                intent.putExtra(VerticalGridActivity.Color, "#0074A2");  //TODO find a way to transfer category color
                 System.out.println("Vertical grid");
                 getActivity().startActivity(intent);
             }
@@ -299,6 +306,7 @@ public class MainFragment extends BrowseFragment {
     }
 
     private void updateBackground(String uri) {
+        this.uri = uri;
         int width = mMetrics.widthPixels;
         int height = mMetrics.heightPixels;
         /*Glide.with(getActivity())

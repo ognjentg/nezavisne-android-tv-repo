@@ -10,6 +10,8 @@ import com.telegroup.nezavisnetvapp.R;
 public class VerticalGridActivity extends Activity {
 
     private static final String TAG = VerticalGridActivity.class.getSimpleName();
+    public static final String CategoryId = "CategoryId";
+    public static final String Color = "Color";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
