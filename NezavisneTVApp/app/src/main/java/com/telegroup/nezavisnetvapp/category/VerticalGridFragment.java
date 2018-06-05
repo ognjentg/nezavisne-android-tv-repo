@@ -97,7 +97,7 @@ public class VerticalGridFragment extends android.support.v17.leanback.app.Verti
         final String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonArrayRequest";
                                 final Gson gson=new Gson();
 
-                                JsonArrayRequest newsRequest = new JsonArrayRequest("http://dtp.nezavisne.com/app/rubrika/" + getActivity().getIntent().getSerializableExtra(VerticalGridActivity.CategoryId) + "/1/20",
+                                JsonArrayRequest newsRequest = new JsonArrayRequest("http://dtp.nezavisne.com/app/rubrika/" + getActivity().getIntent().getSerializableExtra(VerticalGridActivity.CategoryId) + "/1/30",
                                         new Response.Listener<JSONArray>() {
                                             @Override
                                             public void onResponse(JSONArray newsJSONArray) {

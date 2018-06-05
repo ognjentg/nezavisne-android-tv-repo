@@ -77,12 +77,19 @@ public class NewsCardView extends ImageCardView {
         mNewsTitle.post(new Runnable() {
             @Override
             public void run() {
+                System.out.println("TEXT: " + mNewsTitle.getText());
+                System.out.println("REAL1" + mNewsTitle.getHeight());
                 System.out.println("K:"+mNewsTitle.getLineCount());
                 if (mNewsTitle.getLineCount()>1) {
                     int px = (int) pxFromDp(getContext(), 20 * mNewsTitle.getLineCount());
                     System.out.println("PX:" + px);
 
-                    mNewsTitle.getLayoutParams().height = px;
+                    ViewGroup.LayoutParams params = mNewsTitle.getLayoutParams();
+                    params.height = px;
+                    mNewsTitle.setLayoutParams(params);
+
+                    //mNewsTitle.setHeight(px);
+                    //mNewsTitle.getLayoutParams().height = px;
                     //mNewsTitle.setLayoutParams(params);
                     System.out.println("REAL" + mNewsTitle.getHeight());
                 }

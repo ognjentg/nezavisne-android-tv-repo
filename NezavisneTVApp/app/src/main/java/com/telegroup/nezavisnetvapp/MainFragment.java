@@ -42,12 +42,14 @@ import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
+import android.support.v17.leanback.widget.PresenterSelector;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,12 +66,15 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 import com.telegroup.nezavisnetvapp.category.VerticalGridActivity;
+import com.telegroup.nezavisnetvapp.header.IconHeaderItem;
+import com.telegroup.nezavisnetvapp.header.IconHeaderItemPresenter;
 import com.telegroup.nezavisnetvapp.model.Category;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
 import com.telegroup.nezavisnetvapp.presenter.NewsCardPresenter;
 import com.telegroup.nezavisnetvapp.presenter.StringCardPresenter;
 import com.telegroup.nezavisnetvapp.util.ImageProcess;
 import com.telegroup.nezavisnetvapp.widget.NewsCardView;
+import com.telegroup.nezavisnetvapp.widget.SearchActivity;
 
 import org.json.JSONArray;
 
@@ -143,7 +148,8 @@ public class MainFragment extends BrowseFragment {
                             categories = Arrays.asList(gson.fromJson(categoriesJSONArray.toString(), Category[].class));
                             int i = 0;
                             for (final Category category : categories) {
-                                HeaderItem header = new HeaderItem(i++, category.getTitle());
+                                IconHeaderItem header = new IconHeaderItem(i++, category.getTitle());
+                                header.setIconResId(drawable.ic_cat);  //TODO add regular icons (name icons as icon_category.getTitle() = icon_novosti, icon_sport...)
                                 //CardPresenter cardPresenter = new CardPresenter();
                                 ClassPresenterSelector selector = new ClassPresenterSelector();
                                 StringCardPresenter stringPresenter = new StringCardPresenter();
@@ -215,10 +221,24 @@ public class MainFragment extends BrowseFragment {
         // set search icon color
         setSearchAffordanceColor(getResources().getColor(color.search_opaque));
 
+        setHeaderPresenterSelector(new PresenterSelector() {
+            @Override
+            public Presenter getPresenter(Object o) {
+                return new IconHeaderItemPresenter();
+            }
+        });
+
     }
 
     private void setupEventListeners() {
+        setOnSearchClickedListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent);
+            }
+        });
 
         setOnItemViewClickedListener(new ItemViewClickedListener());
         setOnItemViewSelectedListener(new ItemViewSelectedListener());

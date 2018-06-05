@@ -36,6 +36,7 @@
         <activity android:name=".DetailsActivity" />
         <activity android:name=".BrowseErrorActivity" />
         <activity android:name=".category.VerticalGridActivity"/>
+        <activity android:name=".widget.SearchActivity" />
     </application>
 
 </manifest>
