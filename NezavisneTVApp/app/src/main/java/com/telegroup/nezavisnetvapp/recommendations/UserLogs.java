@@ -5,24 +5,19 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.telegroup.nezavisnetvapp.Article;
 import com.telegroup.nezavisnetvapp.R;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Set;
 
 public class UserLogs {
@@ -70,6 +65,14 @@ public class UserLogs {
                 e.printStackTrace();
             }
         }
+    }
+
+    public HashMap<String, String> getCategoryLog(){
+        return categoryLog;
+    }
+
+    public HashMap<String, String> getNewsLog(){
+        return newsLog;
     }
 
     public void userOpenedNews(NewsCard newsCard, String categoryId){

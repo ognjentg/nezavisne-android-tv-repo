@@ -62,6 +62,7 @@ import com.telegroup.nezavisnetvapp.legacy.CardPresenter;
 import com.telegroup.nezavisnetvapp.model.Category;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
 import com.telegroup.nezavisnetvapp.presenter.NewsCardPresenter;
+import com.telegroup.nezavisnetvapp.recommendations.RecommendationEngine;
 import com.telegroup.nezavisnetvapp.recommendations.UserLogs;
 import com.telegroup.nezavisnetvapp.util.BlurTransformation;
 import com.telegroup.nezavisnetvapp.util.ImageProcess;
@@ -73,7 +74,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -89,6 +92,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
     private static final int DETAIL_THUMB_HEIGHT = 274;
 
     public static UserLogs userLogs;
+    public static RecommendationEngine recommendationEngine;
 
 
     private NewsCard mSelectedArticle;
@@ -97,18 +101,62 @@ public class ArticleDetailsFragment extends DetailsFragment {
     private ClassPresenterSelector mPresenterSelector;
     private String categoryId;
     private Context context;
+    private ArrayList<NewsCard> toReturn;
+    private boolean completedRecommendations;
 
     private DetailsFragmentBackgroundController mDetailsBackground;
+
+    private void getRecommendations(){
+        final HashMap<String, Integer> categoriesToGet = recommendationEngine.getAmountsToGet();
+        final HashMap<String, String> newsLog = ArticleDetailsFragment.userLogs.getNewsLog();
+        final Gson gson = new Gson();
+        for(final String category : categoriesToGet.keySet()){
+            final String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonArrayRequest";
+            JsonArrayRequest newsRequest = new JsonArrayRequest("http://dtp.nezavisne.com/app/rubrika/" + category + "/1/15",
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray newsJSONArray) {
+                            toReturn = new ArrayList<>();
+                            if (newsJSONArray.length() > 0) {
+                                List<NewsCard> newsCards = Arrays.asList(gson.fromJson(newsJSONArray.toString(), NewsCard[].class));
+                                ArrayList<NewsCard> newsCardsArrayList = new ArrayList<>();
+                                newsCardsArrayList.addAll(newsCards);
+                                for(int i = 0; i < newsCardsArrayList.size(); i++){
+                                    if(newsLog.values().contains(newsCardsArrayList.get(i).getNewsId())){
+                                        newsCardsArrayList.remove(i--);
+                                    }
+                                }
+                                for(int i = 0; i < categoriesToGet.get(category); i++){
+                                    System.out.println("######" + newsCardsArrayList.get(i));
+                                    toReturn.add(newsCardsArrayList.get(i));
+                                }
+                                completedRecommendations = true;
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("NO", "NO");
+                }
+            });
+            AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(newsRequest, REQUEST_TAG);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate DetailsFragment");
         super.onCreate(savedInstanceState);
 
+        completedRecommendations = false;
         context = getActivity().getApplicationContext();
 
         if(userLogs == null){
             userLogs = new UserLogs(context);
+        }
+
+        if(recommendationEngine == null){
+            recommendationEngine = new RecommendationEngine(context);
         }
 
         mDetailsBackground = new DetailsFragmentBackgroundController(this);
@@ -120,7 +168,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
         initializeBackground(mSelectedArticle.getImageUrl().replaceAll("/[0-9]*x[0-9]*/", "/750x450/"));
 
         userLogs.userOpenedNews(mSelectedArticle, categoryId);
-        System.out.println(userLogs.getJsonString());
+        getRecommendations();
 
         if (mSelectedArticle != null) {
             String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonObjectRequest";
