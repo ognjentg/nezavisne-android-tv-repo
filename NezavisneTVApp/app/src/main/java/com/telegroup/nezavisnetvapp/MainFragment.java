@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,8 +34,6 @@ import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
-import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
@@ -52,7 +49,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -61,7 +57,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
@@ -77,6 +72,7 @@ import com.telegroup.nezavisnetvapp.widget.NewsCardView;
 import com.telegroup.nezavisnetvapp.widget.SearchActivity;
 
 import org.json.JSONArray;
+import org.jsoup.helper.StringUtil;
 
 import static com.telegroup.nezavisnetvapp.R.*;
 
@@ -136,6 +132,12 @@ public class MainFragment extends BrowseFragment {
         }
     }
 
+    private String getLowerCaseNoDashesNoLatinCharsCategoryName(String name){
+        String s = "icon_" + name.toLowerCase().replaceAll("\\s|-", "");
+
+        return s.replace("š", "s").replace("đ", "d").replace("č", "c").replace("ć", "c").replace("ž", "z");
+    }
+
     private void loadRows() {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         final String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonArrayRequest";
@@ -149,8 +151,11 @@ public class MainFragment extends BrowseFragment {
                             int i = 0;
                             for (final Category category : categories) {
                                 IconHeaderItem header = new IconHeaderItem(i++, category.getTitle());
-                                header.setIconResId(drawable.ic_cat);  //TODO add regular icons (name icons as icon_category.getTitle() = icon_novosti, icon_sport...)
-                                //CardPresenter cardPresenter = new CardPresenter();
+
+                                String lowerCaseNoDashesNoLatinCharsCategoryName = getLowerCaseNoDashesNoLatinCharsCategoryName(category.getTitle());
+                                int iconResId = context.getResources().getIdentifier(lowerCaseNoDashesNoLatinCharsCategoryName, "drawable", context.getPackageName());
+                                header.setIconResId(iconResId);
+
                                 ClassPresenterSelector selector = new ClassPresenterSelector();
                                 StringCardPresenter stringPresenter = new StringCardPresenter();
                                 NewsCardPresenter cardPresenter = new NewsCardPresenter();

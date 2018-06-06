@@ -33,6 +33,7 @@ public class IconHeaderItemPresenter extends RowHeaderPresenter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.icon_header_item, null);
+        view.setAlpha(mUnselectedAlpha);
         return new ViewHolder(view);
     }
 
@@ -57,10 +58,11 @@ public class IconHeaderItemPresenter extends RowHeaderPresenter {
         rootView.setFocusable(true);
 
         ImageView iconView = (ImageView) rootView.findViewById(R.id.header_icon);
-        Drawable icon = rootView.getResources().getDrawable(headerItem.getIconResId());//rootView.getResources().getDrawable(R.drawable.ic_cat, null);
+        Drawable icon = rootView.getResources().getDrawable(headerItem.getIconResId());
         iconView.setImageDrawable(icon);
 
         TextView label = (TextView) rootView.findViewById(R.id.header_label);
+        label.setTextSize(16);
         label.setText(headerItem.getName());
     }
 
