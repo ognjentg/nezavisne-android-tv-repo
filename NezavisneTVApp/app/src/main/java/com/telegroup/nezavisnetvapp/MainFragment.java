@@ -32,6 +32,7 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.HeadersFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.ListRow;
@@ -41,6 +42,7 @@ import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.PresenterSelector;
 import android.support.v17.leanback.widget.Row;
+import android.support.v17.leanback.widget.RowHeaderPresenter;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.DisplayMetrics;
@@ -230,6 +232,18 @@ public class MainFragment extends BrowseFragment {
             @Override
             public Presenter getPresenter(Object o) {
                 return new IconHeaderItemPresenter();
+            }
+        });
+
+        getHeadersFragment().setOnHeaderClickedListener(new HeadersFragment.OnHeaderClickedListener() {
+            @Override
+            public void onHeaderClicked(RowHeaderPresenter.ViewHolder viewHolder, Row row) {
+                Intent intent=new Intent(getActivity(), VerticalGridActivity.class);
+                intent.putExtra(VerticalGridActivity.CategoryId, categories.get((int)row.getId()).getId());
+                intent.putExtra(VerticalGridActivity.Color, "#0074A2");  //TODO find a way to transfer category color
+                System.out.println("Vertical grid");
+                getActivity().startActivity(intent);
+
             }
         });
 
