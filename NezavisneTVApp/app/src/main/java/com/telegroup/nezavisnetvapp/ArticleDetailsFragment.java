@@ -62,6 +62,7 @@ import com.telegroup.nezavisnetvapp.legacy.CardPresenter;
 import com.telegroup.nezavisnetvapp.model.Category;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
 import com.telegroup.nezavisnetvapp.presenter.NewsCardPresenter;
+import com.telegroup.nezavisnetvapp.recommendations.UserLogs;
 import com.telegroup.nezavisnetvapp.util.BlurTransformation;
 import com.telegroup.nezavisnetvapp.util.ImageProcess;
 
@@ -87,6 +88,8 @@ public class ArticleDetailsFragment extends DetailsFragment {
     private static final int DETAIL_THUMB_WIDTH = 274;
     private static final int DETAIL_THUMB_HEIGHT = 274;
 
+    public static UserLogs userLogs;
+
 
     private NewsCard mSelectedArticle;
     private Article mRealArticle=new Article();
@@ -104,6 +107,10 @@ public class ArticleDetailsFragment extends DetailsFragment {
 
         context = getActivity().getApplicationContext();
 
+        if(userLogs == null){
+            userLogs = new UserLogs(context);
+        }
+
         mDetailsBackground = new DetailsFragmentBackgroundController(this);
 
         mSelectedArticle =
@@ -111,6 +118,10 @@ public class ArticleDetailsFragment extends DetailsFragment {
         categoryId =
                 (String) getActivity().getIntent().getSerializableExtra(DetailsActivity.CategoryId);
         initializeBackground(mSelectedArticle.getImageUrl().replaceAll("/[0-9]*x[0-9]*/", "/750x450/"));
+
+        userLogs.userOpenedNews(mSelectedArticle, categoryId);
+        System.out.println(userLogs.getJsonString());
+
         if (mSelectedArticle != null) {
             String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonObjectRequest";
 
