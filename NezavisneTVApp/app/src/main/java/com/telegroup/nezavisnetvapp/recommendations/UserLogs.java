@@ -26,7 +26,7 @@ public class UserLogs {
     private Context context;
     private File logFile = null;
 
-    @SerializedName("caregoryLog")
+    @SerializedName("categoryLog")
     @Expose
     private HashMap<String, String> categoryLog;
 
