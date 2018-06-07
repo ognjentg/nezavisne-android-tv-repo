@@ -7,11 +7,13 @@ import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.telegroup.nezavisnetvapp.R;
+import com.telegroup.nezavisnetvapp.model.Image;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
 import com.telegroup.nezavisnetvapp.widget.NewsCardView;
 
@@ -93,21 +95,37 @@ public class NewsCardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
-        NewsCard card = (NewsCard) item;
-        NewsCardView cardView = (NewsCardView) viewHolder.view;
+        if (item instanceof NewsCard) {
+            NewsCard card = (NewsCard) item;
+            NewsCardView cardView = (NewsCardView) viewHolder.view;
 
-        Log.d(TAG, "onBindViewHolder");
-        if (card.getImageUrl() != null) {
-            cardView.setCardSubCategory(card.getSubCategory());
-            cardView.findViewById(R.id.news_subcategory).setBackgroundColor(Color.parseColor(card.getColor()));
-            cardView.setCardText(card.getTitle());
+            Log.d(TAG, "onBindViewHolder");
+            if (card.getImageUrl() != null) {
+                cardView.setCardSubCategory(card.getSubCategory());
+                cardView.findViewById(R.id.news_subcategory).setBackgroundColor(Color.parseColor(card.getColor()));
+                cardView.setCardText(card.getTitle());
+                Glide.with(viewHolder.view.getContext())
+                        .load(card.getImageUrl())
+                        .centerCrop()
+                        .error(mDefaultCardImage)
+                        .into(cardView.getNewsImageView());
+            }
+        }else if (item instanceof Image){
+            Image image=(Image)item;
+            Log.d(TAG, "Image");
+
+            NewsCardView cardView = (NewsCardView) viewHolder.view;
+            cardView.findViewById(R.id.news_subcategory).setVisibility(View.INVISIBLE);
+            cardView.findViewById(R.id.news_title).setVisibility(View.INVISIBLE);
             Glide.with(viewHolder.view.getContext())
-                    .load(card.getImageUrl())
+                    .load(image.getUrl())
                     .centerCrop()
                     .error(mDefaultCardImage)
                     .into(cardView.getNewsImageView());
+
         }
     }
+
     @Override
     public void onUnbindViewHolder(ViewHolder viewHolder) {
 

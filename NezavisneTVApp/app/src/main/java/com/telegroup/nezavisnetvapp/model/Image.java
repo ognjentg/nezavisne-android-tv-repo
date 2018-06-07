@@ -2,7 +2,9 @@ package com.telegroup.nezavisnetvapp.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Image {
+import java.io.Serializable;
+
+public class Image implements Serializable {
     @SerializedName("slikaURL")
     private String url;
     @SerializedName("Naslov")

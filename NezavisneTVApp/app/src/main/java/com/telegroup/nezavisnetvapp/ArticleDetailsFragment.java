@@ -58,6 +58,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
+import com.telegroup.nezavisnetvapp.gallery.GalleryGridActivity;
 import com.telegroup.nezavisnetvapp.legacy.CardPresenter;
 import com.telegroup.nezavisnetvapp.model.Category;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
@@ -307,7 +308,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
                     }
                 });*/
-        if ("D".equals(mRealArticle.getGalleryFlag())) {
+        if (mRealArticle.getImages().length>1) {
             ArrayObjectAdapter actionAdapter = new ArrayObjectAdapter();
             Action action = new Action(
                     5,
@@ -341,7 +342,9 @@ public class ArticleDetailsFragment extends DetailsFragment {
         detailsPresenter.setOnActionClickedListener(new OnActionClickedListener() {
             @Override
             public void onActionClicked(Action action) {
-                Toast.makeText(getActivity(),"Test",Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(getActivity(), GalleryGridActivity.class);
+                intent.putExtra("images",mRealArticle.getImages());
+                getActivity().startActivity(intent);
             }
         });
 
