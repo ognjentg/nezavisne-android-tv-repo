@@ -240,8 +240,7 @@ public class MainFragment extends BrowseFragment {
             public void onHeaderClicked(RowHeaderPresenter.ViewHolder viewHolder, Row row) {
                 Intent intent=new Intent(getActivity(), VerticalGridActivity.class);
                 intent.putExtra(VerticalGridActivity.CategoryId, categories.get((int)row.getId()).getId());
-                intent.putExtra(VerticalGridActivity.Color, "#0074A2");  //TODO find a way to transfer category color
-                System.out.println("Vertical grid");
+                intent.putExtra(VerticalGridActivity.Color, categories.get((int)row.getId()).getColor());
                 getActivity().startActivity(intent);
 
             }
@@ -291,8 +290,7 @@ public class MainFragment extends BrowseFragment {
                         .commit();*/
                 Intent intent=new Intent(getActivity(), VerticalGridActivity.class);
                 intent.putExtra(VerticalGridActivity.CategoryId, categories.get((int)row.getId()).getId());
-                intent.putExtra(VerticalGridActivity.Color, "#0074A2");  //TODO find a way to transfer category color
-                System.out.println("Vertical grid");
+                intent.putExtra(VerticalGridActivity.Color, categories.get((int)row.getId()).getColor());
                 getActivity().startActivity(intent);
             }
         }
