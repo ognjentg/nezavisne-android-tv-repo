@@ -359,25 +359,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        /*ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
-                        for (int i = 0; i < response.length(); i++)
-                            try {
-
-                                NewsCard  card=new NewsCard(response.getJSONObject(i).getString("Naslov"),
-                                        response.getJSONObject(i).getString("vijestID"),
-                                        response.getJSONObject(i).getString("Slika"),
-                                        response.getJSONObject(i).getString("Autor"),
-                                        response.getJSONObject(i).getString("meniID"));
-                                if (!card.getNewsId().equals(mRealArticle.getId()+""))
-                                listRowAdapter.add(card);
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        HeaderItem header = new HeaderItem(0, "Povezane vijesti");
-                        mAdapter.add(new ListRow(header, listRowAdapter));
-                        mPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());*/
+                        if(getActivity() != null){
                         final Gson gson = new Gson();
                         final String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonArrayRequest";
                         final ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new NewsCardPresenter());
@@ -385,10 +367,10 @@ public class ArticleDetailsFragment extends DetailsFragment {
                                 new Response.Listener<JSONArray>() {
                                     @Override
                                     public void onResponse(JSONArray newsJSONArray) {
-                                        if (newsJSONArray.length() > 0) {
+                                        if (newsJSONArray.length() > 0 && getActivity() != null) {
                                             List<NewsCard> newsCards = Arrays.asList(gson.fromJson(newsJSONArray.toString(), NewsCard[].class));
                                             for (NewsCard newsCard : newsCards) {
-                                                if(!newsCard.getNewsId().equals(mSelectedArticle.getNewsId())) {
+                                                if (!newsCard.getNewsId().equals(mSelectedArticle.getNewsId())) {
                                                     newsCard.setColor(mSelectedArticle.getColor());
                                                     listRowAdapter.add(newsCard);
                                                 }
@@ -401,12 +383,15 @@ public class ArticleDetailsFragment extends DetailsFragment {
                                 }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                                Intent intent=new Intent(getActivity(),ErrorActivity.class);
-                                startActivity(intent);
+                                if (getActivity() != null) {
+                                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                                    Intent intent = new Intent(getActivity(), ErrorActivity.class);
+                                    startActivity(intent);
+                                }
                             }
                         });
                         AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(newsRequest, REQUEST_TAG);
+                    }
                     }
                 }, new Response.ErrorListener() {
 

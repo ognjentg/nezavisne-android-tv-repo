@@ -93,6 +93,12 @@ public class NewsCardView extends ImageCardView {
                     //mNewsTitle.setLayoutParams(params);
                     System.out.println("REAL" + mNewsTitle.getHeight());
                 }
+                else if(mNewsTitle.getLineCount() == 1){
+                    int px = (int) pxFromDp(getContext(), 20 * mNewsTitle.getLineCount() * 2);
+                    ViewGroup.LayoutParams params = mNewsTitle.getLayoutParams();
+                    params.height = px;
+                    mNewsTitle.setLayoutParams(params);
+                }
             }
         });
     }

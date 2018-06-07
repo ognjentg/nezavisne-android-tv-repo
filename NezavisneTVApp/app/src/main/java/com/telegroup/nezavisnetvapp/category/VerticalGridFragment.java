@@ -95,33 +95,34 @@ public class VerticalGridFragment extends android.support.v17.leanback.app.Verti
     }
     private void loadRows() {
         final String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonArrayRequest";
-                                final Gson gson=new Gson();
+        final Gson gson = new Gson();
 
 
-                                /////////////////////////////
-                                //30 nije dijeljivo sa 4 :)//
-                                //JsonArrayRequest newsRequest = new JsonArrayRequest("http://dtp.nezavisne.com/app/rubrika/" + getActivity().getIntent().getSerializableExtra(VerticalGridActivity.CategoryId) + "/1/30",
-                                JsonArrayRequest newsRequest = new JsonArrayRequest("http://dtp.nezavisne.com/app/rubrika/" + getActivity().getIntent().getSerializableExtra(VerticalGridActivity.CategoryId) + "/1/32",
-                                        new Response.Listener<JSONArray>() {
-                                            @Override
-                                            public void onResponse(JSONArray newsJSONArray) {
-                                                if (newsJSONArray.length() > 0) {
-                                                    List<NewsCard> newsCards = Arrays.asList(gson.fromJson(newsJSONArray.toString(), NewsCard[].class));
-                                                    for (NewsCard newsCard : newsCards) {
-                                                        newsCard.setColor((String) getActivity().getIntent().getSerializableExtra(VerticalGridActivity.Color));
-                                                        mAdapter.add(newsCard);
-                                                    }
-                                                }
-                                            }
-                                        }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        VolleyLog.d(TAG, "Error: " + error.getMessage());
-                                        Intent intent=new Intent(getActivity(),ErrorActivity.class);
-                                        startActivity(intent);
-                                    }
-                                });
-                                AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(newsRequest, REQUEST_TAG);
+        /////////////////////////////
+        //30 nije dijeljivo sa 4 :)//
+        //JsonArrayRequest newsRequest = new JsonArrayRequest("http://dtp.nezavisne.com/app/rubrika/" + getActivity().getIntent().getSerializableExtra(VerticalGridActivity.CategoryId) + "/1/30",
+
+            JsonArrayRequest newsRequest = new JsonArrayRequest("http://dtp.nezavisne.com/app/rubrika/" + getActivity().getIntent().getSerializableExtra(VerticalGridActivity.CategoryId) + "/1/32",
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray newsJSONArray) {
+                            if (newsJSONArray.length() > 0 && getActivity() != null) {
+                                List<NewsCard> newsCards = Arrays.asList(gson.fromJson(newsJSONArray.toString(), NewsCard[].class));
+                                for (NewsCard newsCard : newsCards) {
+                                    newsCard.setColor((String) getActivity().getIntent().getSerializableExtra(VerticalGridActivity.Color));
+                                    mAdapter.add(newsCard);
+                                }
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Intent intent = new Intent(getActivity(), ErrorActivity.class);
+                    startActivity(intent);
+                }
+            });
+            AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(newsRequest, REQUEST_TAG);
     }
     private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
         @Override
