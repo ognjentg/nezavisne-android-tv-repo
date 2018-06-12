@@ -12,9 +12,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.FileDescriptorBitmapDecoder;
+import com.bumptech.glide.load.resource.bitmap.VideoBitmapDecoder;
 import com.telegroup.nezavisnetvapp.R;
 import com.telegroup.nezavisnetvapp.model.Image;
 import com.telegroup.nezavisnetvapp.model.NewsCard;
+import com.telegroup.nezavisnetvapp.model.Video;
 import com.telegroup.nezavisnetvapp.widget.NewsCardView;
 
 /*
@@ -123,6 +128,18 @@ public class NewsCardPresenter extends Presenter {
                     .error(mDefaultCardImage)
                     .into(cardView.getNewsImageView());
 
+        }else if (item instanceof Video){
+            Video video=(Video)item;
+            NewsCardView cardView = (NewsCardView) viewHolder.view;
+            cardView.findViewById(R.id.news_subcategory).setVisibility(View.INVISIBLE);
+            cardView.findViewById(R.id.news_title).setVisibility(View.INVISIBLE);
+            String url=viewHolder.view.getContext().getString(R.string.youtube_pre)+video.getVideo()+viewHolder.view.getContext().getString(R.string.youtube_post);
+            System.out.println("URL:"+url);
+            Glide.with(viewHolder.view.getContext())
+                    .load(url)
+                    .centerCrop()
+                    .error(mDefaultCardImage)
+                    .into(cardView.getNewsImageView());
         }
     }
 

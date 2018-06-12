@@ -6,6 +6,10 @@
     <string name="error_fragment">Error Fragment</string>
     <string name="personal_settings">Personal Settings</string>
     <string name="gallery">Galerija</string>
+    <string name="video_gallery">Video Galerija</string>
+    <string name="youtube_link">https://www.youtube.com/embed/</string>
+    <string name="youtube_pre">https://img.youtube.com/vi/</string>
+    <string name="youtube_post">/0.jpg</string>
     <string name="rent_1">Rent By Day</string>
     <string name="rent_2">From $1.99</string>
     <string name="buy_1">Buy and Own</string>

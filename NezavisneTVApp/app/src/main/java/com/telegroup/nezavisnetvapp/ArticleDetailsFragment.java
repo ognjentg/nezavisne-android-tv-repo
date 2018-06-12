@@ -67,6 +67,7 @@ import com.telegroup.nezavisnetvapp.recommendations.RecommendationEngine;
 import com.telegroup.nezavisnetvapp.recommendations.UserLogs;
 import com.telegroup.nezavisnetvapp.util.BlurTransformation;
 import com.telegroup.nezavisnetvapp.util.ImageProcess;
+import com.telegroup.nezavisnetvapp.video.VideoGridActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,11 +87,13 @@ import java.util.List;
  */
 public class ArticleDetailsFragment extends DetailsFragment {
     private static final String TAG = "ArticleDetailsFragment";
-
+    private static final int GALLERY_ID=10;
+    private static final int VIDEO_ID=20;
 
 
     private static final int DETAIL_THUMB_WIDTH = 274;
     private static final int DETAIL_THUMB_HEIGHT = 274;
+
 
     public static UserLogs userLogs;
     public static RecommendationEngine recommendationEngine;
@@ -167,9 +170,9 @@ public class ArticleDetailsFragment extends DetailsFragment {
         categoryId =
                 (String) getActivity().getIntent().getSerializableExtra(DetailsActivity.CategoryId);
         initializeBackground(mSelectedArticle.getImageUrl().replaceAll("/[0-9]*x[0-9]*/", "/750x450/"));
-
-        userLogs.userOpenedNews(mSelectedArticle, categoryId);
-        getRecommendations();
+            //zakomentarisao sam da bi mogao da citam vjesti
+      /*  userLogs.userOpenedNews(mSelectedArticle, categoryId);
+        getRecommendations();*/
 
         if (mSelectedArticle != null) {
             String REQUEST_TAG = "com.androidtutorialpoint.volleyJsonObjectRequest";
@@ -192,6 +195,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                                 mAdapter = new ArrayObjectAdapter(mPresenterSelector);
                                 System.out.println(mRealArticle.getTitle());
                                 System.out.println(mRealArticle.getBody());
+                                System.out.println("VIDEOS"+mRealArticle.getVideos().length);
                                 setupDetailsOverviewRow();
                                 setupDetailsOverviewRowPresenter();
                                 setupGallery();
@@ -311,10 +315,19 @@ public class ArticleDetailsFragment extends DetailsFragment {
         if (mRealArticle.getImages().length>1) {
             ArrayObjectAdapter actionAdapter = new ArrayObjectAdapter();
             Action action = new Action(
-                    5,
+                    GALLERY_ID,
                     getResources().getString(R.string.gallery), "",
                     getResources().getDrawable(R.drawable.photo_camera));
             ;
+            actionAdapter.add(
+                    action);
+            row.setActionsAdapter(actionAdapter);
+        }
+        if (mRealArticle.getVideos().length>0) {
+            ArrayObjectAdapter actionAdapter = new ArrayObjectAdapter();
+            Action action = new Action(
+                    VIDEO_ID,
+                    getResources().getString(R.string.video_gallery), "");
             actionAdapter.add(
                     action);
             row.setActionsAdapter(actionAdapter);
@@ -342,9 +355,17 @@ public class ArticleDetailsFragment extends DetailsFragment {
         detailsPresenter.setOnActionClickedListener(new OnActionClickedListener() {
             @Override
             public void onActionClicked(Action action) {
-                Intent intent=new Intent(getActivity(), GalleryGridActivity.class);
-                intent.putExtra("images",mRealArticle.getImages());
-                getActivity().startActivity(intent);
+
+                if(action.getId()==GALLERY_ID) {
+                   Intent intent = new Intent(getActivity(), GalleryGridActivity.class);
+                    intent.putExtra("images", mRealArticle.getImages());
+                    getActivity().startActivity(intent);
+                }else if(action.getId()==VIDEO_ID){
+                   Intent intent = new Intent(getActivity(), VideoGridActivity.class);
+                    intent.putExtra("videos", mRealArticle.getVideos());
+                    getActivity().startActivity(intent);
+                }
+
             }
         });
 

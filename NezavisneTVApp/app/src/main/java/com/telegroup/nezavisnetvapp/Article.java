@@ -18,6 +18,7 @@ import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 import com.telegroup.nezavisnetvapp.model.Image;
+import com.telegroup.nezavisnetvapp.model.Video;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -51,6 +52,16 @@ public class Article implements Serializable {
     private String galleryFlag;
     @SerializedName("meniRoditelj")
     private String categoryId;
+    @SerializedName("Video")
+    private Video[] videos;
+
+    public Video[] getVideos() {
+        return videos;
+    }
+
+    public void setVideos(Video[] videos) {
+        this.videos = videos;
+    }
 
     public Article(long id, String title, String description, String body, Image[] images, String galleryFlag, String categoryId) {
         this.id = id;
@@ -60,6 +71,16 @@ public class Article implements Serializable {
         this.images = images;
         this.galleryFlag = galleryFlag;
         this.categoryId = categoryId;
+    }
+    public Article(long id, String title, String description, String body, Image[] images, String galleryFlag, String categoryId,Video[] videos) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.body = body;
+        this.images = images;
+        this.galleryFlag = galleryFlag;
+        this.categoryId = categoryId;
+        this.videos=videos;
     }
     public Article(){
 

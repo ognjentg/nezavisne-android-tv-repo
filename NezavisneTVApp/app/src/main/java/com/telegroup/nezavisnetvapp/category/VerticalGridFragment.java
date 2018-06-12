@@ -53,7 +53,7 @@ public class VerticalGridFragment extends android.support.v17.leanback.app.Verti
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setTitle("VerticalGridFragment");
+        //setTitle("VerticalGridFragment");
         //setBadgeDrawable(getResources().getDrawable(R.drawable.app_icon_your_company));
 
         setupFragment();
