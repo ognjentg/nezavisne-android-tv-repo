@@ -12,6 +12,7 @@ public class VerticalGridActivity extends Activity {
     private static final String TAG = VerticalGridActivity.class.getSimpleName();
     public static final String CategoryId = "CategoryId";
     public static final String Color = "Color";
+    public static final String Title="Title";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

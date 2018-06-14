@@ -241,6 +241,7 @@ public class MainFragment extends BrowseFragment {
                 Intent intent=new Intent(getActivity(), VerticalGridActivity.class);
                 intent.putExtra(VerticalGridActivity.CategoryId, categories.get((int)row.getId()).getId());
                 intent.putExtra(VerticalGridActivity.Color, categories.get((int)row.getId()).getColor());
+                intent.putExtra(VerticalGridActivity.Title,categories.get((int)row.getId()).getTitle());
                 getActivity().startActivity(intent);
 
             }
@@ -291,6 +292,7 @@ public class MainFragment extends BrowseFragment {
                 Intent intent=new Intent(getActivity(), VerticalGridActivity.class);
                 intent.putExtra(VerticalGridActivity.CategoryId, categories.get((int)row.getId()).getId());
                 intent.putExtra(VerticalGridActivity.Color, categories.get((int)row.getId()).getColor());
+                intent.putExtra(VerticalGridActivity.Title,categories.get((int)row.getId()).getTitle());
                 getActivity().startActivity(intent);
             }
         }
