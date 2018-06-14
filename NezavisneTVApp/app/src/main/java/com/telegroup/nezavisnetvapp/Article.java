@@ -23,6 +23,7 @@ import com.telegroup.nezavisnetvapp.model.Video;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /*
  * Article class represents video entity with title, description, image thumbs and video url.
@@ -53,13 +54,13 @@ public class Article implements Serializable {
     @SerializedName("meniRoditelj")
     private String categoryId;
     @SerializedName("Video")
-    private Video[] videos;
+    private List<Video> videos;
 
-    public Video[] getVideos() {
+    public List<Video> getVideos() {
         return videos;
     }
 
-    public void setVideos(Video[] videos) {
+    public void setVideos(List<Video> videos) {
         this.videos = videos;
     }
 
@@ -72,7 +73,7 @@ public class Article implements Serializable {
         this.galleryFlag = galleryFlag;
         this.categoryId = categoryId;
     }
-    public Article(long id, String title, String description, String body, Image[] images, String galleryFlag, String categoryId,Video[] videos) {
+    public Article(long id, String title, String description, String body, Image[] images, String galleryFlag, String categoryId,List<Video> videos) {
         this.id = id;
         this.title = title;
         this.description = description;

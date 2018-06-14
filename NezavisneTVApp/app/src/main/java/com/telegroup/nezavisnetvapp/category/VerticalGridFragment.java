@@ -53,6 +53,7 @@ import com.telegroup.nezavisnetvapp.util.ImageProcess;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -86,7 +87,9 @@ public class VerticalGridFragment extends android.support.v17.leanback.app.Verti
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
-       setTitle((String) getActivity().getIntent().getSerializableExtra(VerticalGridActivity.Title));
+        setTitle((String) getActivity().getIntent().getSerializableExtra(VerticalGridActivity.Title));
+        TextView textView= (TextView) getTitleView();
+
         //setBadgeDrawable(getResources().getDrawable(R.drawable.app_icon_your_company));
 
         setupFragment();
