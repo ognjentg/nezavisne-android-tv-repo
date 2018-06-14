@@ -15,10 +15,13 @@
 package com.telegroup.nezavisnetvapp;
 
 import android.animation.ObjectAnimator;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -46,6 +49,13 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import android.support.media.tv.Channel;
+import android.support.media.tv.TvContractCompat;
+import android.support.media.tv.ChannelLogoUtils;
+import android.support.media.tv.PreviewProgram;
+import android.support.media.tv.WatchNextProgram;
+
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
@@ -53,8 +63,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
@@ -65,12 +74,10 @@ import com.telegroup.nezavisnetvapp.model.NewsCard;
 import com.telegroup.nezavisnetvapp.presenter.NewsCardPresenter;
 import com.telegroup.nezavisnetvapp.recommendations.RecommendationEngine;
 import com.telegroup.nezavisnetvapp.recommendations.UserLogs;
-import com.telegroup.nezavisnetvapp.util.BlurTransformation;
 import com.telegroup.nezavisnetvapp.util.ImageProcess;
 import com.telegroup.nezavisnetvapp.video.VideoGridActivity;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -80,6 +87,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import static android.support.media.tv.ChannelLogoUtils.storeChannelLogo;
 
 /*
  * LeanbackDetailsFragment extends DetailsFragment, a Wrapper fragment for leanback details screens.
@@ -106,7 +115,6 @@ public class ArticleDetailsFragment extends DetailsFragment {
     private String categoryId;
     private Context context;
     private ArrayList<NewsCard> toReturn;
-    private boolean completedRecommendations;
 
     private DetailsFragmentBackgroundController mDetailsBackground;
 
@@ -131,10 +139,20 @@ public class ArticleDetailsFragment extends DetailsFragment {
                                     }
                                 }
                                 for(int i = 0; i < categoriesToGet.get(category); i++){
-                                    System.out.println("######" + newsCardsArrayList.get(i));
                                     toReturn.add(newsCardsArrayList.get(i));
                                 }
-                                completedRecommendations = true;
+                                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    Channel.Builder builder = new Channel.Builder();
+                                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                                    builder.setType(TvContractCompat.Channels.TYPE_PREVIEW)
+                                            .setDisplayName("Čitajte još")
+                                            .setAppLinkIntent(intent);
+                                    Uri channelUri = context.getContentResolver().insert(
+                                            TvContractCompat.Channels.CONTENT_URI, builder.build().toContentValues());
+                                    long channelId = ContentUris.parseId(channelUri);
+                                    storeChannelLogo(context, channelId, BitmapFactory.decodeResource(context.getResources(), R.drawable.nezavisne));
+                                    TvContractCompat.requestChannelBrowsable(context, channelId);
+                                }
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -152,7 +170,6 @@ public class ArticleDetailsFragment extends DetailsFragment {
         Log.d(TAG, "onCreate DetailsFragment");
         super.onCreate(savedInstanceState);
 
-        completedRecommendations = false;
         context = getActivity().getApplicationContext();
 
         if(userLogs == null){
@@ -235,6 +252,8 @@ public class ArticleDetailsFragment extends DetailsFragment {
                 .format(DecodeFormat.PREFER_ARGB_8888)
                 .centerCrop()
                 .error(R.drawable.default_background1)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap bitmap,
@@ -262,6 +281,8 @@ public class ArticleDetailsFragment extends DetailsFragment {
                 .format(DecodeFormat.PREFER_ARGB_8888)
                 .centerCrop()
                 .error(R.drawable.default_background1)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap bitmap,
