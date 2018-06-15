@@ -42,6 +42,7 @@
         <activity android:name=".widget.SearchActivity" />
         <activity android:name=".gallery.GalleryGridActivity"/>
         <activity android:name=".video.VideoGridActivity"/>
+        <activity android:name=".gallery.GalleryActivity"/>
     </application>
 
 </manifest>

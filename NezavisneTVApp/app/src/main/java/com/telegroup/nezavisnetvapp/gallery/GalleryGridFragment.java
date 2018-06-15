@@ -10,6 +10,7 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -37,6 +38,7 @@ public class GalleryGridFragment extends android.support.v17.leanback.app.Vertic
     private static final String TAG = "GalleryGridFragment";
     private static final int NUM_COLUMNS = 4;
     private ArrayObjectAdapter mAdapter;
+    private Image[] images;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,14 @@ public class GalleryGridFragment extends android.support.v17.leanback.app.Vertic
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
+            if (item instanceof  Image){
+                Image image=(Image) item;
+                int position=findPosition(image.getUrl());
+                Intent intent=new Intent(getActivity(),GalleryActivity.class);
+                intent.putExtra("position",position);
+                intent.putExtra("images",images);
+                getActivity().startActivity(intent);
+            }
           /*  if (item instanceof NewsCard) {
                 NewsCard movie = (NewsCard) item;
 
@@ -84,7 +94,7 @@ public class GalleryGridFragment extends android.support.v17.leanback.app.Vertic
         }
     }
     private void loadRows() {
-            Image[] images=(Image[])getActivity().getIntent().getSerializableExtra("images");
+            images=(Image[])getActivity().getIntent().getSerializableExtra("images");
             for(Image image:images){
                 mAdapter.add(image);
             }
@@ -100,5 +110,14 @@ public class GalleryGridFragment extends android.support.v17.leanback.app.Vertic
             }*/
 
         }
+    }
+
+    private int findPosition(String url){
+        for(int i=0;i<images.length;i++){
+            if (images[i].getUrl().equals(url))
+                return i;
+        }
+        return -1;
+
     }
 }
