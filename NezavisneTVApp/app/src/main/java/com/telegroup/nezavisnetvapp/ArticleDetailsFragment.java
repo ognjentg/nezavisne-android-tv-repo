@@ -212,7 +212,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                                 mAdapter = new ArrayObjectAdapter(mPresenterSelector);
                                 System.out.println(mRealArticle.getTitle());
                                 System.out.println(mRealArticle.getBody());
-                                System.out.println("VIDEOS"+mRealArticle.getVideos().length);
+                              //  System.out.println("VIDEOS"+mRealArticle.getVideos().length);
                                 setupDetailsOverviewRow();
                                 setupDetailsOverviewRowPresenter();
                                 setupGallery();
@@ -344,7 +344,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                     action);
             row.setActionsAdapter(actionAdapter);
         }
-        if (mRealArticle.getVideos().length>0) {
+      /*  if (mRealArticle.getVideos().length>0) {
             ArrayObjectAdapter actionAdapter = new ArrayObjectAdapter();
             Action action = new Action(
                     VIDEO_ID,
@@ -352,7 +352,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
             actionAdapter.add(
                     action);
             row.setActionsAdapter(actionAdapter);
-        }
+        }*/
         mAdapter.add(row);
     }
 
@@ -383,7 +383,7 @@ public class ArticleDetailsFragment extends DetailsFragment {
                     getActivity().startActivity(intent);
                 }else if(action.getId()==VIDEO_ID){
                    Intent intent = new Intent(getActivity(), VideoGridActivity.class);
-                    intent.putExtra("videos", mRealArticle.getVideos());
+               //     intent.putExtra("videos", mRealArticle.getVideos());
                     getActivity().startActivity(intent);
                 }
 

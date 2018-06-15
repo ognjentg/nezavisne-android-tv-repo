@@ -48,7 +48,7 @@ public class GalleryViewFragment extends Fragment {
     private Image[] images;
     private View view;
 
-    public GalleryViewFragment(){
+    public GalleryViewFragment() {
 
     }
 
@@ -56,34 +56,34 @@ public class GalleryViewFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-       view=inflater.inflate(R.layout.activity_gallery_view,container,false);
-        images=(Image[])getActivity().getIntent().getSerializableExtra("images");
-        position=(Integer) getActivity().getIntent().getSerializableExtra("position");
-        mainImage=(ImageView)view.findViewById(R.id.gallery_image);
+        view = inflater.inflate(R.layout.activity_gallery_view, container, false);
+        images = (Image[]) getActivity().getIntent().getSerializableExtra("images");
+        position = (Integer) getActivity().getIntent().getSerializableExtra("position");
+        mainImage = (ImageView) view.findViewById(R.id.gallery_image);
         Glide.with(getActivity())
                 .load(images[position].getUrl())
-                .centerCrop()
+                .fitCenter()
                 .into(mainImage);
         mainImage.requestFocus();
         mainImage.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                System.out.println("PROSLO");
+
                 if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    switch(keyCode) {
+                    switch (keyCode) {
                         case KeyEvent.KEYCODE_DPAD_LEFT:
-                            if (--position==-1)
-                                position=images.length-1;
+                            if (--position == -1)
+                                position = images.length - 1;
                             Glide.with(getActivity())
                                     .load(images[position].getUrl())
-                                    .centerCrop()
+                                    .fitCenter()
                                     .into(mainImage);
                             break;
 
                         case KeyEvent.KEYCODE_DPAD_RIGHT:
                             Glide.with(getActivity())
-                                    .load(images[position=(position+1)%images.length].getUrl())
-                                    .centerCrop()
+                                    .load(images[position = (position + 1) % images.length].getUrl())
+                                    .fitCenter()
                                     .into(mainImage);
                             break;
                     }
@@ -94,11 +94,7 @@ public class GalleryViewFragment extends Fragment {
         });
         return view;
     }
-
-
-
-    }
-
+}
 
 
 
