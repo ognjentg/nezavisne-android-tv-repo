@@ -11,6 +11,7 @@ import android.support.v17.leanback.widget.VerticalGridPresenter;
 import android.util.Log;
 
 import com.telegroup.nezavisnetvapp.model.Image;
+import com.telegroup.nezavisnetvapp.model.Playlist;
 import com.telegroup.nezavisnetvapp.model.Video;
 import com.telegroup.nezavisnetvapp.presenter.NewsCardPresenter;
 
@@ -22,6 +23,7 @@ public class VideoGridFragment extends android.support.v17.leanback.app.Vertical
     private static final String TAG = "VideoGridFragment";
     private static final int NUM_COLUMNS = 4;
     private ArrayObjectAdapter mAdapter;
+    private Playlist playlist;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class VideoGridFragment extends android.support.v17.leanback.app.Vertical
         setGridPresenter(gridPresenter);
         mAdapter = new ArrayObjectAdapter(new NewsCardPresenter());
         System.out.println("SETUP Videooo");
+        playlist=new Playlist();
         loadRows();
         setAdapter(mAdapter);
     }
@@ -57,22 +60,17 @@ public class VideoGridFragment extends android.support.v17.leanback.app.Vertical
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-          /*  if (item instanceof NewsCard) {
-                NewsCard movie = (NewsCard) item;
-
-                Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(DetailsActivity.Article, movie);
-                intent.putExtra(DetailsActivity.CategoryId, (String) getActivity().getIntent().getSerializableExtra(VerticalGridActivity.CategoryId));
-                getActivity().startActivity(intent);
-            }*/
+          //ovde ce ici poziv plejera
 
         }
     }
     //ucitavanje video
     private void loadRows() {
             Video[] videos=(Video[])getActivity().getIntent().getSerializableExtra("videos");
+        System.out.println(videos.length+" ucitano je videa");
             for(Video video:videos){
                 mAdapter.add(video);
+                playlist.add(video);
             }
     }
     private final class ItemViewSelectedListener implements OnItemViewSelectedListener {

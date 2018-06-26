@@ -54,13 +54,13 @@ public class Article implements Serializable {
     @SerializedName("meniRoditelj")
     private String categoryId;
     @SerializedName("Video")
-    private List<Video> videos;
+    private Video[] videos;
 
-    public List<Video> getVideos() {
+    public Video[] getVideos() {
         return videos;
     }
 
-    public void setVideos(List<Video> videos) {
+    public void setVideos(Video[] videos) {
         this.videos = videos;
     }
 
@@ -73,7 +73,7 @@ public class Article implements Serializable {
         this.galleryFlag = galleryFlag;
         this.categoryId = categoryId;
     }
-    public Article(long id, String title, String description, String body, Image[] images, String galleryFlag, String categoryId,List<Video> videos) {
+    public Article(long id, String title, String description, String body, Image[] images, String galleryFlag, String categoryId,Video[] videos) {
         this.id = id;
         this.title = title;
         this.description = description;
